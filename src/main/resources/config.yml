@@ -1,0 +1,318 @@
+# Big thanks and love for using my plugins! ^^
+
+#|--------------------------------------------------------------------------------------------------------------------|#
+# Plugin: Lottery
+# Author: https://www.mc-market.org/members/89497/ | https://www.spigotmc.org/members/radekjenejlepsi.227786/
+# Description: Simple plugin for players to participate in an in-game lottery.
+# Dependencies:
+#   -> PLJRApi
+#   -> Vault
+#|--------------------------------------------------------------------------------------------------------------------|#
+
+##################\
+# Settings Setup #############################################################\
+################## Here, you can enable or disable functions of this plugin. # \
+                 #############################################################  \
+settings:
+  multiple-tickets: true #-> Should players be able to buy multiple tickets?
+  confirmation: true #-> Should we ask players for confirmation, when buying tickets?
+  broadcast-chat: true #-> Should we broadcast in chat?
+  broadcast-actionbar: false #-> Should we broadcast in actionbar?
+  broadcast-title: false #-> Should we broadcast in Title?
+  start-on-startup: true #-> Should we start the lottery on server startup?
+  restart-on-end: true #-> Should we start a new lottery after ending one?
+  cost: 100 #-> How much should 1 ticket cost?
+  countdown: 500 #-> How long should it take for a lottery to end? (In seconds)
+#|--------------------------------------------------------------------------------------------------------------------|#
+
+####################\
+# Broadcast Setup ####################################################\
+################### Here, you can customize the looks of broadcasts. # \
+                  ####################################################  \
+broadcast:
+  chat:
+    start:
+      - ""
+      - "§a§lLOTTERY"
+      - "§fNew §elottery §fjust started! §7(§b%cost §fper ticket§7)"
+      - "§8» §fUse §b/lottery §ffor more information!"
+      - ""
+    end:
+      - ""
+      - "§a§lLOTTERY"
+      - "§eLottery §fjust ended!"
+      - "§8» §fWinner: §e%winner"
+      - "§8» §fAmount: §e%winAmount"
+      - ""
+    no-winner:
+      - ""
+      - "§a§lLOTTERY"
+      - "§eLottery §fjust ended!"
+      - "§8» §fNoone participated."
+      - ""
+  actionbar:
+    start:
+      message: "§a§lLOTTERY: §fNew §elottery §fjust started! §b/lottery"
+      duration: 40
+    end:
+      message: "§a§lLOTTERY: §e%winner §fwon §e%winAmount§f!"
+      duration: 40
+    no-winner:
+      message: "§a§lLOTTERY: §eNoone participated."
+      duration: 40
+  title:
+    start:
+      title: "§a§lLOTTERY"
+      subtitle: "§fNew §elottery §fjust started! §b/lottery"
+      in: 10
+      stay: 40
+      out: 10
+    end:
+      title: "§a§lLOTTERY"
+      subtitle: "§e%winner §fwon §e%winAmount§f!"
+      in: 10
+      stay: 40
+      out: 10
+    no-winner:
+      title: "§a§lLOTTERY"
+      subtitle: "§eNoone participated."
+      in: 10
+      stay: 40
+      out: 10
+
+#|--------------------------------------------------------------------------------------------------------------------|#
+
+###############\
+# Menus Setup ###########################################################\
+############### Here, you can customize the looks of all in-game menus. # \
+              ###########################################################  \
+main-menu:
+  title: "§b§lLottery v${project.version}"
+  player-head:
+    name: "§e%name"
+    lore:
+      - "§8► §fClick to see your statistics."
+  background-1:
+    type: "BLACK_STAINED_GLASS_PANE"
+    name: "§0"
+    amount: 1
+    lore:
+      - "§r"
+  background-2:
+    type: "YELLOW_STAINED_GLASS_PANE"
+    name: "§e"
+    amount: 1
+    lore:
+      - "§e"
+  current-money:
+    type: "CHEST"
+    name: "§e§lCURRENT LOTTERY"
+    amount: 1
+    lore:
+      - "§8► §fMoney in lottery: §b%amount"
+  instructions:
+    type: "WRITABLE_BOOK"
+    name: "§e§lINFORMATION"
+    amount: 1
+    lore:
+      - "§fDo you believe in your luck?"
+      - "§fThen buy some tickets and win!"
+      - "§fThe more tickets you have, the"
+      - "§fbigger chance of winning you have!"
+      - ""
+      - "§eAmount you win, is the sum of all"
+      - "§etickets bought."
+  buy:
+    type: "GOLD_INGOT"
+    name: "§e§lBUY TICKET"
+    amount: 1
+    lore:
+      - "§8► §fClick to buy tickets!"w
+      - ""
+      - "§b§lLeft §bClick §f1 Ticket"
+      - "§b§lMiddle §bClick §f10 Tickets"
+      - "§b§lRight §bClick §f30 Tickets"
+  list:
+    type: "PAPER"
+    name: "§e§lLIST OF BUYERS"
+    amount: 1
+    lore:
+      - "§8► §fClick to see all players"
+      - "§fparticipating in current lottery."
+  help:
+    type: "BOOK"
+    name: "§e§lINFORMATION"
+    amount: 1
+    lore:
+      - "§a§lLottery Help v${project.version}"
+      - ""
+      - "§e/lottery §8» §fOpens the main GUI."
+      - "§e/lottery help §8» §fDisplays this message."
+      - "§e/lottery buy <amount> §8» §fBuys tickets, if you have enough money."
+      - "§e/lottery info §8» §fDisplays information about current lottery."
+      - "§e/lottery list §8» §fOpens GUI with current players in lottery."
+      - "§e/lottery stats <player> §8» §fDisplays player's statistics."
+  time-left:
+    type: "CLOCK"
+    name: "§e§lTIME TO NEXT DRAW"
+    amount: 1
+    lore:
+      - "§8► §fTime to next draw is:"
+      - "§b%time"
+  admin:
+    type: "REDSTONE_TORCH"
+    name: "§c§lADMIN FUNCTIONS"
+    amount: 1
+    lore:
+      - "§bWhoa§f, it seems you are an"
+      - "§fadministrator!"
+      - ""
+      - "§eClick to see some cool stuff!"
+
+list-menu:
+  title: "§b§lLottery v${project.version} - List"
+  heads:
+    name: "§e%name"
+    lore:
+      - "§8► §fClick to see §fplayer's statistics."
+  background-1:
+    type: "BLACK_STAINED_GLASS_PANE"
+    name: "§0"
+    amount: 1
+    lore:
+      - "§r"
+  background-2:
+    type: "YELLOW_STAINED_GLASS_PANE"
+    name: "§e"
+    amount: 1
+    lore:
+      - "§r"
+  back:
+    type: "REDSTONE"
+    name: "§c§lBACK"
+    amount: 1
+    lore:
+      - "§8► §fClick to go to the main menu."
+
+confirm-menu:
+  title: "§b§lLottery v${project.version} - Confirmation"
+  background:
+    type: "BLACK_STAINED_GLASS_PANE"
+    name: "§0"
+    amount: 1
+    lore:
+      - "§r"
+  confirm-1:
+    type: "LIME_STAINED_GLASS_PANE"
+    name: "§a§lCONFIRM"
+    amount: 1
+    lore:
+      - "§8► §fClick to confirm."
+  confirm-2:
+    type: "LIME_STAINED_GLASS"
+    name: "§a§lCONFIRM"
+    amount: 1
+    lore:
+      - "§8► §fClick to confirm."
+  information:
+    type: "WRITABLE_BOOK"
+    name: "§e§lARE YOU SURE?"
+    amount: 1
+    lore:
+      - "§fAre you sure, you want to continue"
+      - "§fwith the transaction?"
+  back:
+    type: "REDSTONE"
+    name: "§c§lBACK"
+    amount: 1
+    lore:
+      - "§8► §fClick to go to the main menu."
+  decline-1:
+    type: "RED_STAINED_GLASS_PANE"
+    name: "§c§lDECLINE"
+    amount: 1
+    lore:
+      - "§8► §fClick to decline."
+  decline-2:
+    type: "RED_STAINED_GLASS"
+    name: "§c§lDECLINE"
+    amount: 1
+    lore:
+      - "§8► §fClick to decline."
+
+player-menu:
+  title: "§b§lLottery v${project.version}"
+  player-head:
+    name: "§e%name"
+    lore:
+      - "§r"
+  background-1:
+    type: "BLACK_STAINED_GLASS_PANE"
+    name: "§0"
+    amount: 1
+    lore:
+      - "§r"
+  background-2:
+    type: "YELLOW_STAINED_GLASS_PANE"
+    name: "§e"
+    amount: 1
+    lore:
+      - "§e"
+  total-earnings:
+    type: "GOLD_INGOT"
+    name: "§e§lTOTAL EARNINGS"
+    amount: 1
+    lore:
+      - "§8► §f%amount"
+  biggest-win:
+    type: "EMERALD"
+    name: "§e§lBIGGEST WINNINGS"
+    amount: 1
+    lore:
+      - "§8► §f%amount"
+  tickets-bought:
+    type: "PAPER"
+    name: "§e§lTICKETS BOUGHT"
+    amount: 1
+    lore:
+      - "§8► §f%amount in current lottery."
+  back:
+    type: "REDSTONE"
+    name: "§c§lBACK"
+    amount: 1
+    lore:
+      - "§8► §fClick to go to the main menu."
+#|--------------------------------------------------------------------------------------------------------------------|#
+
+##############\
+# Lang Setup ################################################################\
+############## Here, you can customize messages, send by the plugin itself. # \
+             ################################################################  \
+
+help:
+  - ""
+  - "§a§lLottery Help v${project.version}"
+  - ""
+  - "§e/lottery §8» §fOpens the main GUI."
+  - "§e/lottery help §8» §fDisplays this message."
+  - "§e/lottery buy <amount> §8» §fBuys tickets, if you have enough money."
+  - "§e/lottery list §8» §fOpens GUI with current players in lottery."
+  - "§e/lottery stats <player> §8» §fDisplays player's statistics."
+
+admin-help:
+  - ""
+  - "§a§lLottery Admin-Help v${project.version}"
+  - ""
+  - "§e/alottery restart §8» §fStops current and starts a brand new lottery."
+  - "§e/alottery help §8» §fDisplays this message."
+  - "§e/alottery draw §8» §fEnds the lottery and selects winner."
+  - "§e/alottery add <amount> §8» §fAdds money to lottery."
+
+lang:
+  PLAYER_WIN: "§aLottery §8» §fYou won §e%winAmount §ffrom lottery!"
+  NO_CONSOLE: "§aLottery §8» §fThis command is for in-game use only!"
+  NO_NUMBER: "§aLottery §8» §b%arg §fis not a number!"
+  BUY_SUCCESS: "§aLottery §8» §fYou have successfully bought §b%amount §fticket(s)!"
+  BUY_FAILURE: "§aLottery §8» §fYou can't buy §b%amount §fticket(s)!"
+  RESTART_SUCCESS: "§aLottery §8» §bSuccessfully §frestarted lottery."
+  ADD_MONEY_SUCCESS: "§aLottery §8» §bSuccessfully §fadded §b%amount$ §fto lottery."
