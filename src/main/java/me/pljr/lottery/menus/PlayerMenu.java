@@ -1,11 +1,9 @@
 package me.pljr.lottery.menus;
 
-import me.pljr.lottery.config.CfgMainMenu;
 import me.pljr.lottery.config.CfgPlayerMenu;
 import me.pljr.lottery.managers.PlayerManager;
 import me.pljr.lottery.objects.CorePlayer;
 import me.pljr.pljrapi.managers.GuiManager;
-import me.pljr.pljrapi.utils.FormatUtil;
 import me.pljr.pljrapi.utils.ItemStackUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

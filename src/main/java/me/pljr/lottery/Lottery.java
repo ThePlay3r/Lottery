@@ -21,7 +21,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class Lottery extends JavaPlugin {
     private static Lottery instance;
     private static ConfigManager configManager;
-    private static DataSource dataSource;
     private static GameLotteryManager gameLotteryManager;
     private static QueryManager queryManager;
 
@@ -62,7 +61,7 @@ public final class Lottery extends JavaPlugin {
     }
 
     private void setupDatabase(){
-        dataSource = PLJRApi.getDataSource();
+        DataSource dataSource = PLJRApi.getDataSource();
         queryManager = new QueryManager(dataSource);
         queryManager.setupTables();
     }

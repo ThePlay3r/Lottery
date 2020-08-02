@@ -8,7 +8,6 @@ import java.util.HashMap;
 public class PlayerManager {
     private static final HashMap<String, CorePlayer> players = new HashMap<>();
     private static final QueryManager query = Lottery.getQueryManager();
-    private static final HashMap<String, String> requests = new HashMap<>();
 
     public static CorePlayer getCorePlayer(String pName){
         if (players.containsKey(pName)){
@@ -27,7 +26,4 @@ public class PlayerManager {
         query.savePlayer(pName);
     }
 
-    public static HashMap<String, String> getRequests() {
-        return requests;
-    }
 }

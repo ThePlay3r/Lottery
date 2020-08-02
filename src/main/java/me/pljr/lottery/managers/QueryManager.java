@@ -4,7 +4,6 @@ import me.pljr.lottery.Lottery;
 import me.pljr.lottery.objects.CorePlayer;
 import me.pljr.pljrapi.database.DataSource;
 import org.bukkit.Bukkit;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
