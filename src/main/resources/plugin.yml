@@ -4,6 +4,7 @@ main: me.pljr.lottery.Lottery
 api-version: 1.16
 authors: [9hx]
 description: Simple plugin for players to participate in an in-game lottery.
+depend: [PLJRApi]
 commands:
   lottery:
     description: Main command for lottery.

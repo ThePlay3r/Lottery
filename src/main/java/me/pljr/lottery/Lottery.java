@@ -38,7 +38,7 @@ public final class Lottery extends JavaPlugin {
 
     private boolean setupPLJRApi(){
         PLJRApi api = (PLJRApi) Bukkit.getServer().getPluginManager().getPlugin("PLJRApi");
-        if (api == null || !Bukkit.getServer().getPluginManager().getPlugin("PLJRApi").isEnabled()){
+        if (api == null){
             Bukkit.getConsoleSender().sendMessage("§cLottery: PLJRApi not found, disabling plugin!");
             getServer().getPluginManager().disablePlugin(this);
             return false;

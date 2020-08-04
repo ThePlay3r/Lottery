@@ -127,7 +127,7 @@ main-menu:
     name: "§e§lBUY TICKET"
     amount: 1
     lore:
-      - "§8► §fClick to buy tickets!"w
+      - "§8► §fClick to buy tickets!"
       - ""
       - "§b§lLeft §bClick §f1 Ticket"
       - "§b§lMiddle §bClick §f10 Tickets"

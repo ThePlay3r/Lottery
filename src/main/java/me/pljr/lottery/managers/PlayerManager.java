@@ -25,5 +25,4 @@ public class PlayerManager {
         if (!players.containsKey(pName)) return;
         query.savePlayer(pName);
     }
-
 }

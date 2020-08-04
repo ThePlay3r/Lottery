@@ -3,9 +3,9 @@ package me.pljr.lottery.menus;
 import me.pljr.lottery.Lottery;
 import me.pljr.lottery.config.CfgListMenu;
 import me.pljr.lottery.managers.GameLotteryManager;
+import me.pljr.pljrapi.XMaterial;
 import me.pljr.pljrapi.managers.GuiManager;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -56,7 +56,7 @@ public class ListMenu implements Listener {
                 if (slot < 45 && slot > -1){
                     ItemStack itemStack = event.getCurrentItem();
                     if (itemStack == null) return;
-                    if (itemStack.getType().equals(Material.SKULL_ITEM)){
+                    if (itemStack.getType().equals(XMaterial.PLAYER_HEAD.parseMaterial())){
                         SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
                         PlayerMenu.open(player, skullMeta.getOwner());
                     }
