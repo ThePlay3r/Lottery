@@ -15,7 +15,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class LotteryCommand implements CommandExecutor {
+public class LotteryCommand extends CommandUtil implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -24,7 +24,7 @@ public class LotteryCommand implements CommandExecutor {
             return false;
         }
         Player player = (Player) sender;
-        if (!CommandUtil.checkPerm(player, "lottery.use")) return false;
+        if (!checkPerm(player, "lottery.use")) return false;
 
         // /lottery
         if (args.length < 1){
@@ -34,23 +34,23 @@ public class LotteryCommand implements CommandExecutor {
 
         // /lottery help
         if (args[0].equalsIgnoreCase("help")){
-            if (!CommandUtil.checkPerm(player, "lottery.help")) return false;
-            CommandUtil.sendHelp(player, CfgLang.help);
+            if (!checkPerm(player, "lottery.help")) return false;
+            sendHelp(player, CfgLang.help);
             return true;
         }
 
         // /lottery list
         if (args[0].equalsIgnoreCase("list")){
-            if (!CommandUtil.checkPerm(player, "lottery.list")) return false;
+            if (!checkPerm(player, "lottery.list")) return false;
             ListMenu.open(player);
             return true;
         }
 
         // /lottery buy <amount>
         if (args[0].equalsIgnoreCase("buy")){
-            if (!CommandUtil.checkPerm(player, "lottery.buy")) return false;
+            if (!checkPerm(player, "lottery.buy")) return false;
             if (args.length != 2){
-                CommandUtil.sendHelp(player, CfgLang.help);
+                sendHelp(player, CfgLang.help);
                 return false;
             }
             if (!NumberUtil.isInt(args[1])){
@@ -71,17 +71,17 @@ public class LotteryCommand implements CommandExecutor {
 
         // /lottery stats <player>
         if (args[0].equalsIgnoreCase("stats")){
-            if (!CommandUtil.checkPerm(player, "lottery.stats")) return false;
+            if (!checkPerm(player, "lottery.stats")) return false;
             if (args.length != 2){
                 PlayerMenu.open(player, player.getName());
                 return true;
             }
-            if (!CommandUtil.checkPerm(player, "lottery.stats.others")) return false;
+            if (!checkPerm(player, "lottery.stats.others")) return false;
             PlayerMenu.open(player, args[1]);
             return true;
         }
 
-        CommandUtil.sendHelp(player, CfgLang.help);
+        sendHelp(player, CfgLang.help);
         return false;
     }
 }

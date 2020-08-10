@@ -61,7 +61,7 @@ public final class Lottery extends JavaPlugin {
     }
 
     private void setupDatabase(){
-        DataSource dataSource = PLJRApi.getDataSource();
+        DataSource dataSource = DataSource.getFromConfig(configManager);
         queryManager = new QueryManager(dataSource);
         queryManager.setupTables();
     }
