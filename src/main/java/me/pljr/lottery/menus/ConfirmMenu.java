@@ -13,6 +13,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
+import java.util.UUID;
+
 public class ConfirmMenu implements Listener {
 
     public static void open(Player player){
@@ -73,8 +75,8 @@ public class ConfirmMenu implements Listener {
                 Player player = (Player) event.getWhoClicked();
                 int slot = event.getSlot();
                 if (slot == 19 ||slot == 20 ||slot == 29 ||slot == 39 ||slot == 28 ||slot == 37 ||slot == 38 ||slot == 30 ||slot == 21){
-                    String playerName = player.getName();
-                    CorePlayer corePlayer = PlayerManager.getCorePlayer(playerName);
+                    UUID playerId = player.getUniqueId();
+                    CorePlayer corePlayer = PlayerManager.getCorePlayer(playerId);
                     player.closeInventory();
                     if (GameLotteryUtil.confirm(player)){
                         player.sendMessage(CfgLang.lang.get(Lang.BUY_SUCCESS).replace("%amount", corePlayer.getConfirmBuyAmount()+""));

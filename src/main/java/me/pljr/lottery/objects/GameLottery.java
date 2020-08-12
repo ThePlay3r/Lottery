@@ -1,11 +1,13 @@
 package me.pljr.lottery.objects;
 
+import org.bukkit.entity.Player;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameLottery {
     private int amount;
-    private List<String> players;
+    private List<Player> players;
 
     public GameLottery(){
         this.amount = 0;
@@ -19,10 +21,10 @@ public class GameLottery {
         return amount;
     }
 
-    public void setPlayers(List<String> players) {
+    public void setPlayers(List<Player> players) {
         this.players = players;
     }
-    public List<String> getPlayers() {
+    public List<Player> getPlayers() {
         return players;
     }
 }

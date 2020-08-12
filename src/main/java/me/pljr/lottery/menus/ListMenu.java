@@ -4,7 +4,9 @@ import me.pljr.lottery.Lottery;
 import me.pljr.lottery.config.CfgListMenu;
 import me.pljr.lottery.managers.GameLotteryManager;
 import me.pljr.pljrapi.XMaterial;
+import me.pljr.pljrapi.XSound;
 import me.pljr.pljrapi.managers.GuiManager;
+import me.pljr.pljrapi.utils.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,8 +28,9 @@ public class ListMenu implements Listener {
 
         int slot = 0;
         List<String> used = new ArrayList<>();
-        for (String playerName : lotteryManager.getCurrentLottery().getPlayers()){
+        for (Player lotteryPlayer : lotteryManager.getCurrentLottery().getPlayers()){
             if (slot>44) break;
+            String playerName = lotteryPlayer.getName();
             if (used.contains(playerName)) continue;
             inventory.setItem(slot, GuiManager.createHead(playerName, CfgListMenu.headsName.replace("%name", playerName), CfgListMenu.headsLore));
             used.add(playerName);
@@ -58,7 +61,12 @@ public class ListMenu implements Listener {
                     if (itemStack == null) return;
                     if (itemStack.getType().equals(XMaterial.PLAYER_HEAD.parseMaterial())){
                         SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
-                        PlayerMenu.open(player, skullMeta.getOwner());
+                        String owner = skullMeta.getOwner();
+                        if (PlayerUtil.isPlayer(owner)){
+                            PlayerMenu.open(player, Bukkit.getPlayer(owner));
+                        }else{
+                            player.playSound(player.getLocation(), XSound.ENTITY_VILLAGER_NO.parseSound(), 1, 1);
+                        }
                     }
                 }else if (slot == 49){
                     MainMenu.open(player);

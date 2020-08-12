@@ -4,25 +4,26 @@ import me.pljr.lottery.Lottery;
 import me.pljr.lottery.objects.CorePlayer;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 public class PlayerManager {
-    private static final HashMap<String, CorePlayer> players = new HashMap<>();
+    private static final HashMap<UUID, CorePlayer> players = new HashMap<>();
     private static final QueryManager query = Lottery.getQueryManager();
 
-    public static CorePlayer getCorePlayer(String pName){
-        if (players.containsKey(pName)){
-            return players.get(pName);
+    public static CorePlayer getCorePlayer(UUID uuid){
+        if (players.containsKey(uuid)){
+            return players.get(uuid);
         }
-        query.loadPlayerSync(pName);
-        return getCorePlayer(pName);
+        query.loadPlayerSync(uuid);
+        return getCorePlayer(uuid);
     }
 
-    public static void setCorePlayer(String pName, CorePlayer corePlayer){
-        players.put(pName, corePlayer);
+    public static void setCorePlayer(UUID uuid, CorePlayer corePlayer){
+        players.put(uuid, corePlayer);
     }
 
-    public static void savePlayer(String pName){
-        if (!players.containsKey(pName)) return;
-        query.savePlayer(pName);
+    public static void savePlayer(UUID uuid){
+        if (!players.containsKey(uuid)) return;
+        query.savePlayer(uuid);
     }
 }

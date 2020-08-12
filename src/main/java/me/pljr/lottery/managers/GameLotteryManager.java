@@ -12,13 +12,13 @@ import me.pljr.pljrapi.PLJRApi;
 import me.pljr.pljrapi.managers.ActionBarManager;
 import me.pljr.pljrapi.managers.TitleManager;
 import me.pljr.pljrapi.utils.ChatUtil;
-import me.pljr.pljrapi.utils.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 public class GameLotteryManager {
     private GameLottery currentLottery;
@@ -49,10 +49,9 @@ public class GameLotteryManager {
     }
 
     public void add(Player player){
-        String playerName = player.getName();
-        List<String> players = currentLottery.getPlayers();
+        List<Player> players = currentLottery.getPlayers();
         int amount = currentLottery.getAmount();
-        players.add(playerName);
+        players.add(player);
         currentLottery.setPlayers(players);
         currentLottery.setAmount(amount+CfgSettings.cost);
     }
@@ -77,17 +76,19 @@ public class GameLotteryManager {
                     TitleManager.broadcast(CfgBroadcast.titleNoWinner);
                 }
             }else{
-                String winner = currentLottery.getPlayers().get(new Random().nextInt(currentLottery.getPlayers().size()));
-                CorePlayer corePlayer = PlayerManager.getCorePlayer(winner);
+                Player winner = currentLottery.getPlayers().get(new Random().nextInt(currentLottery.getPlayers().size()));
+                UUID winnerId = winner.getUniqueId();
+                String winnerName = winner.getName();
+                CorePlayer corePlayer = PlayerManager.getCorePlayer(winnerId);
                 int amount = currentLottery.getAmount();
                 if (CfgSettings.broadcastChat){
-                    ChatUtil.broadcast(GameLotteryUtil.getChatEnd(winner, amount));
+                    ChatUtil.broadcast(GameLotteryUtil.getChatEnd(winnerName, amount));
                 }
                 if (CfgSettings.broadcastActionBar){
-                    ActionBarManager.broadcast(GameLotteryUtil.getActionBarEnd(winner, amount));
+                    ActionBarManager.broadcast(GameLotteryUtil.getActionBarEnd(winnerName, amount));
                 }
                 if (CfgSettings.broadcastTitle){
-                    TitleManager.broadcast(GameLotteryUtil.getTitleEnd(winner, amount));
+                    TitleManager.broadcast(GameLotteryUtil.getTitleEnd(winnerName, amount));
                 }
                 PLJRApi.getVaultEcon().depositPlayer(winner, amount);
                 currentLottery.setPlayers(new ArrayList<>());
@@ -99,12 +100,11 @@ public class GameLotteryManager {
                     corePlayer.setWonAmountMax(amount);
                 }
                 corePlayer.setWonAmountTotal(total+amount);
-                if (PlayerUtil.isPlayer(winner)){
-                    Player player = Bukkit.getPlayer(winner);
-                    player.sendMessage(CfgLang.lang.get(Lang.PLAYER_WIN).replace("%winAmount", amount+""));
+                if (winner.isOnline()){
+                    winner.sendMessage(CfgLang.lang.get(Lang.PLAYER_WIN).replace("%winAmount", amount+""));
                 }
-                PlayerManager.setCorePlayer(winner, corePlayer);
-                PlayerManager.savePlayer(winner);
+                PlayerManager.setCorePlayer(winnerId, corePlayer);
+                PlayerManager.savePlayer(winnerId);
             }
         }
         if (CfgSettings.restartOnEnd){

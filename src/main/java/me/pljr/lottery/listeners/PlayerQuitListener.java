@@ -7,13 +7,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.UUID;
+
 public class PlayerQuitListener implements Listener {
     private final QueryManager query = Lottery.getQueryManager();
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event){
         Player player = event.getPlayer();
-        String playerName = player.getName();
-        query.savePlayer(playerName);
+        UUID playerId = player.getUniqueId();
+        query.savePlayer(playerId);
     }
 }

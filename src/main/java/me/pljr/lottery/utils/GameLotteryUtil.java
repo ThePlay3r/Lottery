@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class GameLotteryUtil {
 
@@ -56,13 +57,13 @@ public class GameLotteryUtil {
     }
 
     public static boolean buy(Player player, int amount){
-        String playerName = player.getName();
+        UUID playerId = player.getUniqueId();
         int cost = amount*CfgSettings.cost;
         double pMoney = PLJRApi.getVaultEcon().getBalance(player);
         if (CfgSettings.confirmation){
-            CorePlayer corePlayer = PlayerManager.getCorePlayer(playerName);
+            CorePlayer corePlayer = PlayerManager.getCorePlayer(playerId);
             corePlayer.setConfirmBuyAmount(amount);
-            PlayerManager.setCorePlayer(playerName, corePlayer);
+            PlayerManager.setCorePlayer(playerId, corePlayer);
         }else{
             if (pMoney >= cost){
                 PLJRApi.getVaultEcon().withdrawPlayer(player, cost);
@@ -73,19 +74,19 @@ public class GameLotteryUtil {
     }
 
     public static boolean confirm(Player player){
-        String playerName = player.getName();
+        UUID playerId = player.getUniqueId();
         double pMoney = PLJRApi.getVaultEcon().getBalance(player);
-        int amount = PlayerManager.getCorePlayer(playerName).getConfirmBuyAmount();
+        int amount = PlayerManager.getCorePlayer(playerId).getConfirmBuyAmount();
         int cost = amount*CfgSettings.cost;
         if (pMoney >= cost){
-            CorePlayer corePlayer = PlayerManager.getCorePlayer(playerName);
+            CorePlayer corePlayer = PlayerManager.getCorePlayer(playerId);
             PLJRApi.getVaultEcon().withdrawPlayer(player, cost);
             for (int i=0;i<amount;i++){
                 Lottery.getGameLotteryManager().add(player);
             }
             int currentTickets = corePlayer.getCurrentTickets();
             corePlayer.setCurrentTickets(currentTickets+amount);
-            PlayerManager.setCorePlayer(playerName, corePlayer);
+            PlayerManager.setCorePlayer(playerId, corePlayer);
             return true;
         }
         return false;

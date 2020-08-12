@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.UUID;
 
 public class QueryManager {
     private final Lottery instance = Lottery.getInstance();
@@ -18,7 +19,7 @@ public class QueryManager {
         this.dataSource = dataSource;
     }
 
-    public void loadPlayerSync(String playerName){
+    public void loadPlayerSync(UUID uuid){
         try {
             int wonAmountTotal = 0;
             int wonAmountLast = 0;
@@ -26,31 +27,31 @@ public class QueryManager {
 
             Connection connection = dataSource.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(
-                    "SELECT * FROM lottery_players WHERE username=?"
+                    "SELECT * FROM lottery_players WHERE uuid=?"
             );
-            preparedStatement.setString(1, playerName);
+            preparedStatement.setString(1, uuid.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
                 wonAmountTotal = resultSet.getInt("wonAmountTotal");
                 wonAmountLast = resultSet.getInt("wonAmountLast");
                 wonAmountMax = resultSet.getInt("wonAmountMax");
             }
-            PlayerManager.setCorePlayer(playerName, new CorePlayer(wonAmountTotal, wonAmountLast, wonAmountMax));
+            PlayerManager.setCorePlayer(uuid, new CorePlayer(wonAmountTotal, wonAmountLast, wonAmountMax));
             dataSource.close(connection, preparedStatement, resultSet);
         }catch (SQLException e){
             e.printStackTrace();
         }
     }
 
-    public void savePlayer(String playerName){
-        CorePlayer corePlayer = PlayerManager.getCorePlayer(playerName);
+    public void savePlayer(UUID uuid){
+        CorePlayer corePlayer = PlayerManager.getCorePlayer(uuid);
         Bukkit.getScheduler().runTaskAsynchronously(instance, ()->{
             try {
                 Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(
                         "REPLACE INTO lottery_players VALUES (?,?,?,?)"
                 );
-                preparedStatement.setString(1, playerName);
+                preparedStatement.setString(1, uuid.toString());
                 preparedStatement.setInt(2, corePlayer.getWonAmountTotal());
                 preparedStatement.setInt(3, corePlayer.getWonAmountLast());
                 preparedStatement.setInt(4, corePlayer.getWonAmountMax());
@@ -67,7 +68,7 @@ public class QueryManager {
             Connection connection = dataSource.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "CREATE TABLE IF NOT EXISTS lottery_players (" +
-                            "username varchar(16) NOT NULL PRIMARY KEY," +
+                            "uuid char(36) NOT NULL PRIMARY KEY," +
                             "wonAmountTotal int NOT NULL," +
                             "wonAmountLast int NOT NULL," +
                             "wonAmountMax int NOT NULL);"

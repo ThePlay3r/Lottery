@@ -10,6 +10,8 @@ import me.pljr.lottery.menus.PlayerMenu;
 import me.pljr.lottery.utils.GameLotteryUtil;
 import me.pljr.pljrapi.utils.CommandUtil;
 import me.pljr.pljrapi.utils.NumberUtil;
+import me.pljr.pljrapi.utils.PlayerUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -73,11 +75,15 @@ public class LotteryCommand extends CommandUtil implements CommandExecutor {
         if (args[0].equalsIgnoreCase("stats")){
             if (!checkPerm(player, "lottery.stats")) return false;
             if (args.length != 2){
-                PlayerMenu.open(player, player.getName());
+                PlayerMenu.open(player, player);
                 return true;
             }
             if (!checkPerm(player, "lottery.stats.others")) return false;
-            PlayerMenu.open(player, args[1]);
+            if (PlayerUtil.isPlayer(args[1])){
+                PlayerMenu.open(player, Bukkit.getPlayer(args[1]));
+            }else{
+                PlayerMenu.open(player, player);
+            }
             return true;
         }
 

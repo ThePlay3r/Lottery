@@ -6,18 +6,21 @@ import me.pljr.lottery.objects.CorePlayer;
 import me.pljr.pljrapi.managers.GuiManager;
 import me.pljr.pljrapi.utils.ItemStackUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
+import java.util.UUID;
+
 public class PlayerMenu implements Listener {
 
-    public static void open(Player player, String menuPlayer){
+    public static void open(Player player, Player menuPlayer){
         Inventory inventory = Bukkit.createInventory(player, 6*9, CfgPlayerMenu.title);
 
-        CorePlayer corePlayer = PlayerManager.getCorePlayer(menuPlayer);
+        CorePlayer corePlayer = PlayerManager.getCorePlayer(menuPlayer.getUniqueId());
 
         inventory.setItem(0, CfgPlayerMenu.background1);
         inventory.setItem(9, CfgPlayerMenu.background1);
@@ -43,7 +46,7 @@ public class PlayerMenu implements Listener {
         inventory.setItem(41, CfgPlayerMenu.background2);
         inventory.setItem(42, CfgPlayerMenu.background2);
 
-        inventory.setItem(22, GuiManager.createHead(menuPlayer, CfgPlayerMenu.playerHeadName.replace("%name", menuPlayer)));
+        inventory.setItem(22, GuiManager.createHead(menuPlayer.getName(), CfgPlayerMenu.playerHeadName.replace("%name", menuPlayer.getName())));
         inventory.setItem(29, ItemStackUtil.replaceLore(CfgPlayerMenu.ticketsBought, "%amount", corePlayer.getCurrentTickets()+""));
         inventory.setItem(31, ItemStackUtil.replaceLore(CfgPlayerMenu.biggestWin, "%amount", corePlayer.getWonAmountMax()+""));
         inventory.setItem(33, ItemStackUtil.replaceLore(CfgPlayerMenu.totalEarnings, "%amount", corePlayer.getWonAmountTotal()+""));
