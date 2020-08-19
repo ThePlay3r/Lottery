@@ -6,6 +6,7 @@ import me.pljr.pljrapi.managers.ConfigManager;
 public class CfgSettings {
     private final static ConfigManager config = Lottery.getConfigManager();
 
+    public static boolean bungee;
     public static boolean multipleTickets;
     public static boolean confirmation;
     public static int cost;
@@ -17,6 +18,7 @@ public class CfgSettings {
     public static boolean restartOnEnd;
 
     public static void load(){
+        CfgSettings.bungee = config.getBoolean("settings.bungee");
         CfgSettings.multipleTickets = config.getBoolean("settings.multiple-tickets");
         CfgSettings.confirmation = config.getBoolean("settings.confirmation");
         CfgSettings.cost = config.getInt("settings.cost");

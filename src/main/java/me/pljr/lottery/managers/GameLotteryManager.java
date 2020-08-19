@@ -32,7 +32,7 @@ public class GameLotteryManager {
     public void start(){
         currentLottery = new GameLottery();
         if (CfgSettings.broadcastChat){
-            ChatUtil.broadcast(GameLotteryUtil.getChatStart());
+            ChatUtil.broadcast(GameLotteryUtil.getChatStart(), CfgSettings.bungee);
         }
         if (CfgSettings.broadcastActionBar){
             ActionBarManager.broadcast(GameLotteryUtil.getActionBarStart());
@@ -67,7 +67,7 @@ public class GameLotteryManager {
         if (selectWinner){
             if (currentLottery.getPlayers().size() == 0){
                 if (CfgSettings.broadcastChat){
-                    ChatUtil.broadcast(CfgBroadcast.chatNoWinner);
+                    ChatUtil.broadcast(CfgBroadcast.chatNoWinner, CfgSettings.bungee);
                 }
                 if (CfgSettings.broadcastActionBar){
                     ActionBarManager.broadcast(CfgBroadcast.actionBarNoWinner);
@@ -79,10 +79,10 @@ public class GameLotteryManager {
                 Player winner = currentLottery.getPlayers().get(new Random().nextInt(currentLottery.getPlayers().size()));
                 UUID winnerId = winner.getUniqueId();
                 String winnerName = winner.getName();
-                CorePlayer corePlayer = PlayerManager.getCorePlayer(winnerId);
+                CorePlayer corePlayer = Lottery.getPlayerManager().getCorePlayer(winnerId);
                 int amount = currentLottery.getAmount();
                 if (CfgSettings.broadcastChat){
-                    ChatUtil.broadcast(GameLotteryUtil.getChatEnd(winnerName, amount));
+                    ChatUtil.broadcast(GameLotteryUtil.getChatEnd(winnerName, amount), CfgSettings.bungee);
                 }
                 if (CfgSettings.broadcastActionBar){
                     ActionBarManager.broadcast(GameLotteryUtil.getActionBarEnd(winnerName, amount));
@@ -103,8 +103,7 @@ public class GameLotteryManager {
                 if (winner.isOnline()){
                     winner.sendMessage(CfgLang.lang.get(Lang.PLAYER_WIN).replace("%winAmount", amount+""));
                 }
-                PlayerManager.setCorePlayer(winnerId, corePlayer);
-                PlayerManager.savePlayer(winnerId);
+                Lottery.getPlayerManager().setCorePlayer(winnerId, corePlayer);
             }
         }
         if (CfgSettings.restartOnEnd){

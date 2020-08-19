@@ -1,9 +1,9 @@
 package me.pljr.lottery.menus;
 
+import me.pljr.lottery.Lottery;
 import me.pljr.lottery.config.CfgConfirmMenu;
 import me.pljr.lottery.config.CfgLang;
 import me.pljr.lottery.enums.Lang;
-import me.pljr.lottery.managers.PlayerManager;
 import me.pljr.lottery.objects.CorePlayer;
 import me.pljr.lottery.utils.GameLotteryUtil;
 import org.bukkit.Bukkit;
@@ -76,7 +76,7 @@ public class ConfirmMenu implements Listener {
                 int slot = event.getSlot();
                 if (slot == 19 ||slot == 20 ||slot == 29 ||slot == 39 ||slot == 28 ||slot == 37 ||slot == 38 ||slot == 30 ||slot == 21){
                     UUID playerId = player.getUniqueId();
-                    CorePlayer corePlayer = PlayerManager.getCorePlayer(playerId);
+                    CorePlayer corePlayer = Lottery.getPlayerManager().getCorePlayer(playerId);
                     player.closeInventory();
                     if (GameLotteryUtil.confirm(player)){
                         player.sendMessage(CfgLang.lang.get(Lang.BUY_SUCCESS).replace("%amount", corePlayer.getConfirmBuyAmount()+""));

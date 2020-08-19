@@ -3,7 +3,6 @@ package me.pljr.lottery.utils;
 import me.pljr.lottery.Lottery;
 import me.pljr.lottery.config.CfgBroadcast;
 import me.pljr.lottery.config.CfgSettings;
-import me.pljr.lottery.managers.PlayerManager;
 import me.pljr.lottery.objects.CorePlayer;
 import me.pljr.pljrapi.PLJRApi;
 import me.pljr.pljrapi.objects.PLJRActionBar;
@@ -61,9 +60,9 @@ public class GameLotteryUtil {
         int cost = amount*CfgSettings.cost;
         double pMoney = PLJRApi.getVaultEcon().getBalance(player);
         if (CfgSettings.confirmation){
-            CorePlayer corePlayer = PlayerManager.getCorePlayer(playerId);
+            CorePlayer corePlayer = Lottery.getPlayerManager().getCorePlayer(playerId);
             corePlayer.setConfirmBuyAmount(amount);
-            PlayerManager.setCorePlayer(playerId, corePlayer);
+            Lottery.getPlayerManager().setCorePlayer(playerId, corePlayer);
         }else{
             if (pMoney >= cost){
                 PLJRApi.getVaultEcon().withdrawPlayer(player, cost);
@@ -76,17 +75,17 @@ public class GameLotteryUtil {
     public static boolean confirm(Player player){
         UUID playerId = player.getUniqueId();
         double pMoney = PLJRApi.getVaultEcon().getBalance(player);
-        int amount = PlayerManager.getCorePlayer(playerId).getConfirmBuyAmount();
+        int amount = Lottery.getPlayerManager().getCorePlayer(playerId).getConfirmBuyAmount();
         int cost = amount*CfgSettings.cost;
         if (pMoney >= cost){
-            CorePlayer corePlayer = PlayerManager.getCorePlayer(playerId);
+            CorePlayer corePlayer = Lottery.getPlayerManager().getCorePlayer(playerId);
             PLJRApi.getVaultEcon().withdrawPlayer(player, cost);
             for (int i=0;i<amount;i++){
                 Lottery.getGameLotteryManager().add(player);
             }
             int currentTickets = corePlayer.getCurrentTickets();
             corePlayer.setCurrentTickets(currentTickets+amount);
-            PlayerManager.setCorePlayer(playerId, corePlayer);
+            Lottery.getPlayerManager().setCorePlayer(playerId, corePlayer);
             return true;
         }
         return false;

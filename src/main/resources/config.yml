@@ -27,6 +27,7 @@ mysql:
 ################## Here, you can enable or disable functions of this plugin. # \
                  #############################################################  \
 settings:
+  bungee: false #-> Should we use bungee functions?
   multiple-tickets: true #-> Should players be able to buy multiple tickets?
   confirmation: true #-> Should we ask players for confirmation, when buying tickets?
   broadcast-chat: true #-> Should we broadcast in chat?

@@ -3,7 +3,6 @@ package me.pljr.lottery.menus;
 import me.pljr.lottery.Lottery;
 import me.pljr.lottery.config.CfgMainMenu;
 import me.pljr.lottery.managers.GameLotteryManager;
-import me.pljr.pljrapi.managers.GuiManager;
 import me.pljr.pljrapi.utils.FormatUtil;
 import me.pljr.pljrapi.utils.ItemStackUtil;
 import org.bukkit.Bukkit;
@@ -49,7 +48,7 @@ public class MainMenu implements Listener {
         inventory.setItem(45, CfgMainMenu.background2);
         inventory.setItem(46, CfgMainMenu.background2);
 
-        inventory.setItem(4, GuiManager.createHead(playerName, CfgMainMenu.playerHeadName.replace("%name", playerName), CfgMainMenu.playerHeadLore));
+        inventory.setItem(4, ItemStackUtil.createHead(playerName, CfgMainMenu.playerHeadName.replace("%name", playerName), 1, CfgMainMenu.playerHeadLore));
         inventory.setItem(20, ItemStackUtil.replaceLore(CfgMainMenu.currentMoney, "%amount", lotteryManager.getCurrentLottery().getAmount()+""));
         inventory.setItem(29, CfgMainMenu.list);
         inventory.setItem(22, CfgMainMenu.instructions);

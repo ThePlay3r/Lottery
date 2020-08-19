@@ -16,6 +16,6 @@ public class PlayerQuitListener implements Listener {
     public void onQuit(PlayerQuitEvent event){
         Player player = event.getPlayer();
         UUID playerId = player.getUniqueId();
-        query.savePlayer(playerId);
+        Lottery.getPlayerManager().savePlayer(playerId);
     }
 }

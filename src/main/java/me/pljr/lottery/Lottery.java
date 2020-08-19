@@ -6,6 +6,7 @@ import me.pljr.lottery.config.*;
 import me.pljr.lottery.listeners.PlayerPreLoginListener;
 import me.pljr.lottery.listeners.PlayerQuitListener;
 import me.pljr.lottery.managers.GameLotteryManager;
+import me.pljr.lottery.managers.PlayerManager;
 import me.pljr.lottery.managers.QueryManager;
 import me.pljr.lottery.menus.ConfirmMenu;
 import me.pljr.lottery.menus.ListMenu;
@@ -15,11 +16,13 @@ import me.pljr.pljrapi.PLJRApi;
 import me.pljr.pljrapi.database.DataSource;
 import me.pljr.pljrapi.managers.ConfigManager;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
 public final class Lottery extends JavaPlugin {
     private static Lottery instance;
+    private static PlayerManager playerManager;
     private static ConfigManager configManager;
     private static GameLotteryManager gameLotteryManager;
     private static QueryManager queryManager;
@@ -30,8 +33,8 @@ public final class Lottery extends JavaPlugin {
         instance = this;
         if (!setupPLJRApi()) return;
         setupConfig();
+        setupManagers();
         setupDatabase();
-        setupLottery();
         setupListeners();
         setupCommands();
     }
@@ -60,16 +63,20 @@ public final class Lottery extends JavaPlugin {
         CfgBroadcast.load();
     }
 
+    private void setupManagers(){
+        playerManager = new PlayerManager();
+        gameLotteryManager = new GameLotteryManager();
+        if (CfgSettings.startOnStartup){
+            gameLotteryManager.start();
+        }
+    }
+
     private void setupDatabase(){
         DataSource dataSource = DataSource.getFromConfig(configManager);
         queryManager = new QueryManager(dataSource);
         queryManager.setupTables();
-    }
-
-    private void setupLottery(){
-        gameLotteryManager = new GameLotteryManager();
-        if (CfgSettings.startOnStartup){
-            gameLotteryManager.start();
+        for (Player player : Bukkit.getOnlinePlayers()){
+            queryManager.loadPlayer(player.getUniqueId());
         }
     }
 
@@ -99,9 +106,15 @@ public final class Lottery extends JavaPlugin {
     public static QueryManager getQueryManager() {
         return queryManager;
     }
+    public static PlayerManager getPlayerManager() {
+        return playerManager;
+    }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        for (Player player : Bukkit.getOnlinePlayers()){
+            queryManager.savePlayerSync(player.getUniqueId());
+        }
     }
 }
