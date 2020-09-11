@@ -20,5 +20,5 @@ Spigot plugin for players to participate in an in-game lottery.
 - Huge Configuration
   
 ## Configuration
-- [Default Configuration](https://github.com/ThePlay3r/Marriage/blob/master/src/main/resources/config.yml)
+- [Default Configuration](https://github.com/ThePlay3r/Lottery/blob/master/src/main/resources/config.yml)
 - [Configuration usage](https://github.com/ThePlay3r/PLJRApi/blob/master/README.md)
