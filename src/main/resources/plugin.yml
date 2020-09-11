@@ -5,7 +5,7 @@ api-version: 1.13
 authors: [9hx]
 description: Simple plugin for players to participate in an in-game lottery.
 depend: [PLJRApi]
-softdepend: [Vault]
+softdepend: [PlaceholderAPI]
 commands:
   lottery:
     description: Main command for lottery.

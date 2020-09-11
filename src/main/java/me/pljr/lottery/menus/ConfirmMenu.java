@@ -6,6 +6,7 @@ import me.pljr.lottery.config.CfgLang;
 import me.pljr.lottery.enums.Lang;
 import me.pljr.lottery.objects.CorePlayer;
 import me.pljr.lottery.utils.GameLotteryUtil;
+import me.pljr.pljrapi.utils.ChatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -79,9 +80,9 @@ public class ConfirmMenu implements Listener {
                     CorePlayer corePlayer = Lottery.getPlayerManager().getCorePlayer(playerId);
                     player.closeInventory();
                     if (GameLotteryUtil.confirm(player)){
-                        player.sendMessage(CfgLang.lang.get(Lang.BUY_SUCCESS).replace("%amount", corePlayer.getConfirmBuyAmount()+""));
+                        ChatUtil.sendMessage(player, CfgLang.lang.get(Lang.BUY_SUCCESS).replace("%amount", corePlayer.getConfirmBuyAmount()+""));
                     }else{
-                        player.sendMessage(CfgLang.lang.get(Lang.BUY_FAILURE).replace("%amount", corePlayer.getConfirmBuyAmount()+""));
+                        ChatUtil.sendMessage(player, CfgLang.lang.get(Lang.BUY_FAILURE).replace("%amount", corePlayer.getConfirmBuyAmount()+""));
                     }
                 }else if (slot == 34 ||slot == 33 ||slot == 24 ||slot == 14 ||slot == 23 ||slot == 32 ||slot == 25 ||slot == 16 ||slot == 15){
                     player.closeInventory();

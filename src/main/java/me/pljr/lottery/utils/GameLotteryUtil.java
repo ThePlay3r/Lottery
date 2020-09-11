@@ -4,9 +4,9 @@ import me.pljr.lottery.Lottery;
 import me.pljr.lottery.config.CfgBroadcast;
 import me.pljr.lottery.config.CfgSettings;
 import me.pljr.lottery.objects.CorePlayer;
-import me.pljr.pljrapi.PLJRApi;
 import me.pljr.pljrapi.objects.PLJRActionBar;
 import me.pljr.pljrapi.objects.PLJRTitle;
+import me.pljr.pljrapi.utils.VaultUtil;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -58,14 +58,14 @@ public class GameLotteryUtil {
     public static boolean buy(Player player, int amount){
         UUID playerId = player.getUniqueId();
         int cost = amount*CfgSettings.cost;
-        double pMoney = PLJRApi.getVaultEcon().getBalance(player);
+        double pMoney = VaultUtil.getBalance(player);
         if (CfgSettings.confirmation){
             CorePlayer corePlayer = Lottery.getPlayerManager().getCorePlayer(playerId);
             corePlayer.setConfirmBuyAmount(amount);
             Lottery.getPlayerManager().setCorePlayer(playerId, corePlayer);
         }else{
             if (pMoney >= cost){
-                PLJRApi.getVaultEcon().withdrawPlayer(player, cost);
+                VaultUtil.withdraw(player, cost);
                 Lottery.getGameLotteryManager().add(player);
             }
         }
@@ -74,12 +74,12 @@ public class GameLotteryUtil {
 
     public static boolean confirm(Player player){
         UUID playerId = player.getUniqueId();
-        double pMoney = PLJRApi.getVaultEcon().getBalance(player);
+        double pMoney = VaultUtil.getBalance(player);
         int amount = Lottery.getPlayerManager().getCorePlayer(playerId).getConfirmBuyAmount();
         int cost = amount*CfgSettings.cost;
         if (pMoney >= cost){
             CorePlayer corePlayer = Lottery.getPlayerManager().getCorePlayer(playerId);
-            PLJRApi.getVaultEcon().withdrawPlayer(player, cost);
+            VaultUtil.withdraw(player, cost);
             for (int i=0;i<amount;i++){
                 Lottery.getGameLotteryManager().add(player);
             }

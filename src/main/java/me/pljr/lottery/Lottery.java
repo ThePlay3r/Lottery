@@ -34,6 +34,7 @@ public final class Lottery extends JavaPlugin {
         if (!setupPLJRApi()) return;
         setupConfig();
         setupManagers();
+        setupPAPI();
         setupDatabase();
         setupListeners();
         setupCommands();
@@ -68,6 +69,12 @@ public final class Lottery extends JavaPlugin {
         gameLotteryManager = new GameLotteryManager();
         if (CfgSettings.startOnStartup){
             gameLotteryManager.start();
+        }
+    }
+
+    private void setupPAPI(){
+        if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
+            new PapiExpansion(this).register();
         }
     }
 

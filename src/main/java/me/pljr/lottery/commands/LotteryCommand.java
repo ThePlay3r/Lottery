@@ -22,7 +22,7 @@ public class LotteryCommand extends CommandUtil implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)){
-            sender.sendMessage(CfgLang.lang.get(Lang.NO_CONSOLE));
+            sendMessage(sender, CfgLang.lang.get(Lang.NO_CONSOLE));
             return false;
         }
         Player player = (Player) sender;
@@ -56,7 +56,7 @@ public class LotteryCommand extends CommandUtil implements CommandExecutor {
                 return false;
             }
             if (!NumberUtil.isInt(args[1])){
-                player.sendMessage(CfgLang.lang.get(Lang.NO_NUMBER).replace("%arg", args[1]));
+                sendMessage(player, CfgLang.lang.get(Lang.NO_NUMBER).replace("%arg", args[1]));
             }
             int amount = Integer.parseInt(args[1]);
             if (GameLotteryUtil.buy(player, amount)){
@@ -64,10 +64,10 @@ public class LotteryCommand extends CommandUtil implements CommandExecutor {
                     ConfirmMenu.open(player);
                     return true;
                 }
-                player.sendMessage(CfgLang.lang.get(Lang.BUY_SUCCESS).replace("%amount", args[1]));
+                sendMessage(sender, CfgLang.lang.get(Lang.BUY_SUCCESS).replace("%amount", args[1]));
                 return true;
             }
-            player.sendMessage(CfgLang.lang.get(Lang.BUY_FAILURE).replace("%amount", args[1]));
+            sendMessage(sender, CfgLang.lang.get(Lang.BUY_FAILURE).replace("%amount", args[1]));
             return false;
         }
 

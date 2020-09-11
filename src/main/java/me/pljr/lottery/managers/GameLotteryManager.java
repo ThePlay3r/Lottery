@@ -12,6 +12,7 @@ import me.pljr.pljrapi.PLJRApi;
 import me.pljr.pljrapi.managers.ActionBarManager;
 import me.pljr.pljrapi.managers.TitleManager;
 import me.pljr.pljrapi.utils.ChatUtil;
+import me.pljr.pljrapi.utils.VaultUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -32,7 +33,7 @@ public class GameLotteryManager {
     public void start(){
         currentLottery = new GameLottery();
         if (CfgSettings.broadcastChat){
-            ChatUtil.broadcast(GameLotteryUtil.getChatStart(), CfgSettings.bungee);
+            ChatUtil.broadcast(GameLotteryUtil.getChatStart(), "", CfgSettings.bungee);
         }
         if (CfgSettings.broadcastActionBar){
             ActionBarManager.broadcast(GameLotteryUtil.getActionBarStart());
@@ -67,7 +68,7 @@ public class GameLotteryManager {
         if (selectWinner){
             if (currentLottery.getPlayers().size() == 0){
                 if (CfgSettings.broadcastChat){
-                    ChatUtil.broadcast(CfgBroadcast.chatNoWinner, CfgSettings.bungee);
+                    ChatUtil.broadcast(CfgBroadcast.chatNoWinner, "", CfgSettings.bungee);
                 }
                 if (CfgSettings.broadcastActionBar){
                     ActionBarManager.broadcast(CfgBroadcast.actionBarNoWinner);
@@ -82,7 +83,7 @@ public class GameLotteryManager {
                 CorePlayer corePlayer = Lottery.getPlayerManager().getCorePlayer(winnerId);
                 int amount = currentLottery.getAmount();
                 if (CfgSettings.broadcastChat){
-                    ChatUtil.broadcast(GameLotteryUtil.getChatEnd(winnerName, amount), CfgSettings.bungee);
+                    ChatUtil.broadcast(GameLotteryUtil.getChatEnd(winnerName, amount), "", CfgSettings.bungee);
                 }
                 if (CfgSettings.broadcastActionBar){
                     ActionBarManager.broadcast(GameLotteryUtil.getActionBarEnd(winnerName, amount));
@@ -90,7 +91,7 @@ public class GameLotteryManager {
                 if (CfgSettings.broadcastTitle){
                     TitleManager.broadcast(GameLotteryUtil.getTitleEnd(winnerName, amount));
                 }
-                PLJRApi.getVaultEcon().depositPlayer(winner, amount);
+                VaultUtil.deposit(winner, amount);
                 currentLottery.setPlayers(new ArrayList<>());
                 corePlayer.setCurrentTickets(0);
                 corePlayer.setWonAmountLast(amount);
@@ -101,7 +102,7 @@ public class GameLotteryManager {
                 }
                 corePlayer.setWonAmountTotal(total+amount);
                 if (winner.isOnline()){
-                    winner.sendMessage(CfgLang.lang.get(Lang.PLAYER_WIN).replace("%winAmount", amount+""));
+                    ChatUtil.sendMessage(winner, CfgLang.lang.get(Lang.PLAYER_WIN).replace("%winAmount", amount+""));
                 }
                 Lottery.getPlayerManager().setCorePlayer(winnerId, corePlayer);
             }

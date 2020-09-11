@@ -6,7 +6,7 @@
 # Description: Simple plugin for players to participate in an in-game lottery.
 # Dependencies:
 #   -> PLJRApi
-#   -> Vault
+#   -> PlaceholderAPI<Optional> (https://www.spigotmc.org/resources/placeholderapi.6245/)
 #|--------------------------------------------------------------------------------------------------------------------|#
 
 ###############\
@@ -31,8 +31,8 @@ settings:
   multiple-tickets: true #-> Should players be able to buy multiple tickets?
   confirmation: true #-> Should we ask players for confirmation, when buying tickets?
   broadcast-chat: true #-> Should we broadcast in chat?
-  broadcast-actionbar: false #-> Should we broadcast in actionbar?
-  broadcast-title: false #-> Should we broadcast in Title?
+  broadcast-actionbar: true #-> Should we broadcast in actionbar?
+  broadcast-title: true #-> Should we broadcast in Title?
   start-on-startup: true #-> Should we start the lottery on server startup?
   restart-on-end: true #-> Should we start a new lottery after ending one?
   cost: 100 #-> How much should 1 ticket cost?
@@ -330,3 +330,4 @@ lang:
   BUY_FAILURE: "§aLottery §8» §fYou can't buy §b%amount §fticket(s)!"
   RESTART_SUCCESS: "§aLottery §8» §bSuccessfully §frestarted lottery."
   ADD_MONEY_SUCCESS: "§aLottery §8» §bSuccessfully §fadded §b%amount$ §fto lottery."
+#|--------------------------------------------------------------------------------------------------------------------|#

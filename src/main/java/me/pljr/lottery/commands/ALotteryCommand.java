@@ -24,7 +24,7 @@ public class ALotteryCommand extends CommandUtil implements CommandExecutor {
         // /alottery restart
         if (args[0].equalsIgnoreCase("restart")){
             if (!checkPerm(sender, "alottery.restart")) return false;
-            sender.sendMessage(CfgLang.lang.get(Lang.RESTART_SUCCESS));
+            sendMessage(sender, CfgLang.lang.get(Lang.RESTART_SUCCESS));
             Lottery.getGameLotteryManager().end(false);
             return true;
         }
@@ -32,7 +32,7 @@ public class ALotteryCommand extends CommandUtil implements CommandExecutor {
         // /alottery draw
         if (args[0].equalsIgnoreCase("draw")){
             if (!checkPerm(sender, "alottery.draw")) return false;
-            sender.sendMessage(CfgLang.lang.get(Lang.RESTART_SUCCESS));
+            sendMessage(sender, CfgLang.lang.get(Lang.RESTART_SUCCESS));
             Lottery.getGameLotteryManager().end(true);
             return true;
         }
@@ -45,7 +45,7 @@ public class ALotteryCommand extends CommandUtil implements CommandExecutor {
             }
             int amount = Integer.parseInt(args[1]);
             Lottery.getGameLotteryManager().addMoney(amount);
-            sender.sendMessage(CfgLang.lang.get(Lang.ADD_MONEY_SUCCESS).replace("%amount", amount+""));
+            sendMessage(sender, CfgLang.lang.get(Lang.ADD_MONEY_SUCCESS).replace("%amount", amount+""));
             return true;
         }
         sendHelp(sender, CfgLang.adminHelp);
