@@ -1,5 +1,5 @@
 
-# Marriage  
+# Lottery  
 Spigot plugin for players to participate in an in-game lottery.
   
 ----  
