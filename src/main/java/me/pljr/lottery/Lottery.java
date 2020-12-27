@@ -8,13 +8,8 @@ import me.pljr.lottery.listeners.PlayerQuitListener;
 import me.pljr.lottery.managers.GameLotteryManager;
 import me.pljr.lottery.managers.PlayerManager;
 import me.pljr.lottery.managers.QueryManager;
-import me.pljr.lottery.menus.ConfirmMenu;
-import me.pljr.lottery.menus.ListMenu;
-import me.pljr.lottery.menus.MainMenu;
-import me.pljr.lottery.menus.PlayerMenu;
-import me.pljr.pljrapi.PLJRApi;
-import me.pljr.pljrapi.database.DataSource;
-import me.pljr.pljrapi.managers.ConfigManager;
+import me.pljr.pljrapispigot.database.DataSource;
+import me.pljr.pljrapispigot.managers.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -31,7 +26,6 @@ public final class Lottery extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         instance = this;
-        if (!setupPLJRApi()) return;
         setupConfig();
         setupManagers();
         setupPAPI();
@@ -40,34 +34,22 @@ public final class Lottery extends JavaPlugin {
         setupCommands();
     }
 
-    private boolean setupPLJRApi(){
-        PLJRApi api = (PLJRApi) Bukkit.getServer().getPluginManager().getPlugin("PLJRApi");
-        if (api == null){
-            Bukkit.getConsoleSender().sendMessage("§cLottery: PLJRApi not found, disabling plugin!");
-            getServer().getPluginManager().disablePlugin(this);
-            return false;
-        }else{
-            Bukkit.getConsoleSender().sendMessage("§aLottery: Hooked into PLJRApi!");
-            return true;
-        }
-    }
-
     private void setupConfig(){
         saveDefaultConfig();
-        configManager = new ConfigManager(getConfig(), "§cLottery:", "config.yml");
-        CfgConfirmMenu.load();
-        CfgListMenu.load();
-        CfgMainMenu.load();
-        CfgPlayerMenu.load();
-        CfgSettings.load();
-        CfgLang.load();
-        CfgBroadcast.load();
+        configManager = new ConfigManager(this, "config.yml");
+        CfgConfirmMenu.load(configManager);
+        CfgListMenu.load(configManager);
+        CfgMainMenu.load(configManager);
+        CfgPlayerMenu.load(configManager);
+        CfgSettings.load(configManager);
+        Lang.load(configManager);
+        CfgBroadcast.load(configManager);
     }
 
     private void setupManagers(){
         playerManager = new PlayerManager();
         gameLotteryManager = new GameLotteryManager();
-        if (CfgSettings.startOnStartup){
+        if (CfgSettings.START_ON_STARTUP){
             gameLotteryManager.start();
         }
     }
@@ -88,10 +70,6 @@ public final class Lottery extends JavaPlugin {
     }
 
     private void setupListeners(){
-        getServer().getPluginManager().registerEvents(new ConfirmMenu(), this);
-        getServer().getPluginManager().registerEvents(new ListMenu(), this);
-        getServer().getPluginManager().registerEvents(new MainMenu(), this);
-        getServer().getPluginManager().registerEvents(new PlayerMenu(), this);
         getServer().getPluginManager().registerEvents(new PlayerPreLoginListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
     }

@@ -2,7 +2,7 @@ package me.pljr.lottery.managers;
 
 import me.pljr.lottery.Lottery;
 import me.pljr.lottery.objects.CorePlayer;
-import me.pljr.pljrapi.database.DataSource;
+import me.pljr.pljrapispigot.database.DataSource;
 import org.bukkit.Bukkit;
 
 import java.sql.Connection;

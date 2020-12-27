@@ -1,29 +1,26 @@
 package me.pljr.lottery.config;
 
-import me.pljr.lottery.Lottery;
-import me.pljr.pljrapi.managers.ConfigManager;
+import me.pljr.pljrapispigot.managers.ConfigManager;
 import org.bukkit.inventory.ItemStack;
 
 public class CfgConfirmMenu {
-    private final static ConfigManager config = Lottery.getConfigManager();
+    public static String TITLE;
+    public static ItemStack BACKGROUND;
+    public static ItemStack CONFIRM_1;
+    public static ItemStack CONFIRM_2;
+    public static ItemStack INFORMATION;
+    public static ItemStack DECLINE_1;
+    public static ItemStack DECLINE_2;
+    public static ItemStack BACK;
 
-    public static String title;
-    public static ItemStack background;
-    public static ItemStack confirm1;
-    public static ItemStack confirm2;
-    public static ItemStack information;
-    public static ItemStack decline1;
-    public static ItemStack decline2;
-    public static ItemStack back;
-
-    public static void load(){
-        CfgConfirmMenu.title = config.getString("confirm-menu.title");
-        CfgConfirmMenu.background = config.getSimpleItemStack("confirm-menu.background");
-        CfgConfirmMenu.confirm1 = config.getSimpleItemStack("confirm-menu.confirm-1");
-        CfgConfirmMenu.confirm2 = config.getSimpleItemStack("confirm-menu.confirm-2");
-        CfgConfirmMenu.information = config.getSimpleItemStack("confirm-menu.information");
-        CfgConfirmMenu.decline1 = config.getSimpleItemStack("confirm-menu.decline-1");
-        CfgConfirmMenu.decline2 = config.getSimpleItemStack("confirm-menu.decline-2");
-        CfgConfirmMenu.back = config.getSimpleItemStack("confirm-menu.back");
+    public static void load(ConfigManager config){
+        CfgConfirmMenu.TITLE = config.getString("confirm-menu.title");
+        CfgConfirmMenu.BACKGROUND = config.getSimpleItemStack("confirm-menu.background");
+        CfgConfirmMenu.CONFIRM_1 = config.getSimpleItemStack("confirm-menu.confirm-1");
+        CfgConfirmMenu.CONFIRM_2 = config.getSimpleItemStack("confirm-menu.confirm-2");
+        CfgConfirmMenu.INFORMATION = config.getSimpleItemStack("confirm-menu.information");
+        CfgConfirmMenu.DECLINE_1 = config.getSimpleItemStack("confirm-menu.decline-1");
+        CfgConfirmMenu.DECLINE_2 = config.getSimpleItemStack("confirm-menu.decline-2");
+        CfgConfirmMenu.BACK = config.getSimpleItemStack("confirm-menu.back");
     }
 }

@@ -1,54 +1,94 @@
 package me.pljr.lottery.commands;
 
 import me.pljr.lottery.Lottery;
-import me.pljr.lottery.config.CfgLang;
-import me.pljr.lottery.enums.Lang;
-import me.pljr.pljrapi.utils.CommandUtil;
-import me.pljr.pljrapi.utils.NumberUtil;
+import me.pljr.lottery.config.Lang;
+import me.pljr.pljrapispigot.utils.CommandUtil;
+import me.pljr.pljrapispigot.utils.NumberUtil;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 
-public class ALotteryCommand extends CommandUtil implements CommandExecutor {
+public class ALotteryCommand extends CommandUtil {
+
+    public ALotteryCommand(){
+        super("alottery", "alottery.use");
+    }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!checkPerm(sender, "alottery.use")) return false;
-
-        // /aloterry help
-        if (args.length < 1 || args[0].equalsIgnoreCase("help")){
-            sendHelp(sender, CfgLang.adminHelp);
-            return false;
-        }
-
-        // /alottery restart
-        if (args[0].equalsIgnoreCase("restart")){
-            if (!checkPerm(sender, "alottery.restart")) return false;
-            sendMessage(sender, CfgLang.lang.get(Lang.RESTART_SUCCESS));
-            Lottery.getGameLotteryManager().end(false);
-            return true;
-        }
-
-        // /alottery draw
-        if (args[0].equalsIgnoreCase("draw")){
-            if (!checkPerm(sender, "alottery.draw")) return false;
-            sendMessage(sender, CfgLang.lang.get(Lang.RESTART_SUCCESS));
-            Lottery.getGameLotteryManager().end(true);
-            return true;
-        }
-
-        // /alottery add <int>
-        if (args[0].equalsIgnoreCase("add")){
-            if (args.length != 2 && !NumberUtil.isInt(args[1])){
-                sendHelp(sender, CfgLang.adminHelp);
-                return false;
+    public void onPlayerCommand(Player player, String[] args){
+        if (args.length == 1){
+            // /aloterry help
+            if (args.length < 1 || args[0].equalsIgnoreCase("help")){
+                sendMessage(player, Lang.ADMIN_HELP);
+                return;
             }
-            int amount = Integer.parseInt(args[1]);
-            Lottery.getGameLotteryManager().addMoney(amount);
-            sendMessage(sender, CfgLang.lang.get(Lang.ADD_MONEY_SUCCESS).replace("%amount", amount+""));
-            return true;
+
+            // /alottery restart
+            if (args[0].equalsIgnoreCase("restart")){
+                if (!checkPerm(player, "alottery.restart")) return;
+                sendMessage(player, Lang.RESTART_SUCCESS.get());
+                Lottery.getGameLotteryManager().end(false);
+                return;
+            }
+
+            // /alottery draw
+            if (args[0].equalsIgnoreCase("draw")){
+                if (!checkPerm(player, "alottery.draw")) return;
+                sendMessage(player, Lang.RESTART_SUCCESS.get());
+                Lottery.getGameLotteryManager().end(true);
+                return;
+            }
         }
-        sendHelp(sender, CfgLang.adminHelp);
-        return false;
+
+        else if (args.length == 2){
+            // /alottery add <int>
+            if (args[0].equalsIgnoreCase("add")){
+                if (!checkInt(player, args[1])) return;
+                int amount = Integer.parseInt(args[1]);
+                Lottery.getGameLotteryManager().addMoney(amount);
+                sendMessage(player, Lang.ADD_MONEY_SUCCESS.get().replace("{amount}", amount+""));
+                return;
+            }
+        }
+        sendMessage(player, Lang.ADMIN_HELP);
+    }
+
+    @Override
+    public void onConsoleCommand(ConsoleCommandSender sender, String[] args){
+        if (args.length == 1){
+            // /aloterry help
+            if (args.length < 1 || args[0].equalsIgnoreCase("help")){
+                sendMessage(sender, Lang.ADMIN_HELP);
+                return;
+            }
+
+            // /alottery restart
+            if (args[0].equalsIgnoreCase("restart")){
+                sendMessage(sender, Lang.RESTART_SUCCESS.get());
+                Lottery.getGameLotteryManager().end(false);
+                return;
+            }
+
+            // /alottery draw
+            if (args[0].equalsIgnoreCase("draw")){
+                sendMessage(sender, Lang.RESTART_SUCCESS.get());
+                Lottery.getGameLotteryManager().end(true);
+                return;
+            }
+        }
+
+        else if (args.length == 2){
+            // /alottery add <int>
+            if (args[0].equalsIgnoreCase("add")){
+                if (!checkInt(sender, args[1])) return;
+                int amount = Integer.parseInt(args[1]);
+                Lottery.getGameLotteryManager().addMoney(amount);
+                sendMessage(sender, Lang.ADD_MONEY_SUCCESS.get().replace("{amount}", amount+""));
+                return;
+            }
+        }
+
+        sendMessage(sender, Lang.ADMIN_HELP);
     }
 }

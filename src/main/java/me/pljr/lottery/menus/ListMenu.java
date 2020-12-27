@@ -3,75 +3,56 @@ package me.pljr.lottery.menus;
 import me.pljr.lottery.Lottery;
 import me.pljr.lottery.config.CfgListMenu;
 import me.pljr.lottery.managers.GameLotteryManager;
-import me.pljr.pljrapi.XMaterial;
-import me.pljr.pljrapi.XSound;
-import me.pljr.pljrapi.utils.ItemStackUtil;
-import me.pljr.pljrapi.utils.PlayerUtil;
+import me.pljr.pljrapispigot.builders.GUIBuilder;
+import me.pljr.pljrapispigot.builders.ItemBuilder;
+import me.pljr.pljrapispigot.objects.GUI;
+import me.pljr.pljrapispigot.objects.GUIItem;
+import me.pljr.pljrapispigot.utils.PlayerUtil;
+import me.pljr.pljrapispigot.xseries.XSound;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListMenu implements Listener {
+public class ListMenu {
 
-    public static void open(Player player){
-        Inventory inventory = Bukkit.createInventory(player, 6*9, CfgListMenu.title);
-
+    public static GUI get(Player player){
+        GUIBuilder builder = new GUIBuilder(CfgListMenu.TITLE, 6);
         GameLotteryManager lotteryManager = Lottery.getGameLotteryManager();
 
         int slot = 0;
         List<String> used = new ArrayList<>();
         for (Player lotteryPlayer : lotteryManager.getCurrentLottery().getPlayers()){
             if (slot>44) break;
-            String playerName = lotteryPlayer.getName();
-            if (used.contains(playerName)) continue;
-            inventory.setItem(slot, ItemStackUtil.createHead(playerName, CfgListMenu.headsName.replace("%name", playerName), 1, CfgListMenu.headsLore));
-            used.add(playerName);
-            slot++;
-        }
-
-        inventory.setItem(45, CfgListMenu.background1);
-        inventory.setItem(46, CfgListMenu.background1);
-        inventory.setItem(47, CfgListMenu.background2);
-        inventory.setItem(51, CfgListMenu.background2);
-        inventory.setItem(52, CfgListMenu.background1);
-        inventory.setItem(53, CfgListMenu.background1);
-
-        inventory.setItem(49, CfgListMenu.back);
-
-        player.openInventory(inventory);
-    }
-
-    @EventHandler
-    public static void onClick(InventoryClickEvent event){
-        if (event.getView().getTitle().equals(CfgListMenu.title)){
-            event.setCancelled(true);
-            if (event.getWhoClicked() instanceof Player){
-                Player player = (Player) event.getWhoClicked();
-                int slot = event.getSlot();
-                if (slot < 45 && slot > -1){
-                    ItemStack itemStack = event.getCurrentItem();
-                    if (itemStack == null) return;
-                    if (itemStack.getType().equals(XMaterial.PLAYER_HEAD.parseMaterial())){
-                        SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
-                        String owner = skullMeta.getOwner();
-                        if (PlayerUtil.isPlayer(owner)){
-                            PlayerMenu.open(player, Bukkit.getPlayer(owner));
+            String lotteryPlayerName = lotteryPlayer.getName();
+            if (used.contains(lotteryPlayerName)) continue;
+            ItemStack item = new ItemBuilder(CfgListMenu.HEADS)
+                    .withOwner(lotteryPlayerName)
+                    .replaceName("{name}", lotteryPlayerName)
+                    .create();
+            builder.setItem(slot, new GUIItem(item,
+                    run -> {
+                        if (PlayerUtil.isPlayer(lotteryPlayerName)){
+                            PlayerMenu.get(player, Bukkit.getPlayer(lotteryPlayerName)).open(player);
                         }else{
                             player.playSound(player.getLocation(), XSound.ENTITY_VILLAGER_NO.parseSound(), 1, 1);
                         }
-                    }
-                }else if (slot == 49){
-                    MainMenu.open(player);
-                }
-            }
+                    }));
+            used.add(lotteryPlayerName);
+            slot++;
         }
+
+        builder.setItem(45, CfgListMenu.BACKGROUND_1);
+        builder.setItem(46, CfgListMenu.BACKGROUND_1);
+        builder.setItem(47, CfgListMenu.BACKGROUND_2);
+        builder.setItem(51, CfgListMenu.BACKGROUND_2);
+        builder.setItem(52, CfgListMenu.BACKGROUND_1);
+        builder.setItem(53, CfgListMenu.BACKGROUND_1);
+
+        builder.setItem(49, new GUIItem(CfgListMenu.BACK, run -> MainMenu.get(player).open(player)));
+
+        return builder.create();
     }
 }

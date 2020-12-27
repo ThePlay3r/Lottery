@@ -1,33 +1,26 @@
 package me.pljr.lottery.config;
 
-import me.pljr.lottery.Lottery;
-import me.pljr.pljrapi.managers.ConfigManager;
+import me.pljr.pljrapispigot.managers.ConfigManager;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
-
 public class CfgPlayerMenu {
-    private final static ConfigManager config = Lottery.getConfigManager();
+    public static String TITLE;
+    public static ItemStack PLAYER_HEAD;
+    public static ItemStack BACKGROUND_1;
+    public static ItemStack BACKGROUND_2;
+    public static ItemStack TOTAL_EARNINGS;
+    public static ItemStack TICKETS_BOUGHT;
+    public static ItemStack BACK;
+    public static ItemStack BIGGEST_WIN;
 
-    public static String title;
-    public static String playerHeadName;
-    public static List<String> playerHeadLore;
-    public static ItemStack background1;
-    public static ItemStack background2;
-    public static ItemStack totalEarnings;
-    public static ItemStack ticketsBought;
-    public static ItemStack back;
-    public static ItemStack biggestWin;
-
-    public static void load(){
-        CfgPlayerMenu.title = config.getString("player-menu.title");
-        CfgPlayerMenu.playerHeadName = config.getString("player-menu.player-head.name");
-        CfgPlayerMenu.playerHeadLore = config.getStringList("player-menu.player-head.lore");
-        CfgPlayerMenu.background1 = config.getSimpleItemStack("player-menu.background-1");
-        CfgPlayerMenu.background2 = config.getSimpleItemStack("player-menu.background-2");
-        CfgPlayerMenu.totalEarnings = config.getSimpleItemStack("player-menu.total-earnings");
-        CfgPlayerMenu.ticketsBought = config.getSimpleItemStack("player-menu.tickets-bought");
-        CfgPlayerMenu.back = config.getSimpleItemStack("player-menu.back");
-        CfgPlayerMenu.biggestWin = config.getSimpleItemStack("player-menu.biggest-win");
+    public static void load(ConfigManager config){
+        CfgPlayerMenu.TITLE = config.getString("player-menu.title");
+        CfgPlayerMenu.PLAYER_HEAD = config.getHead("player-menu.player-head");
+        CfgPlayerMenu.BACKGROUND_1 = config.getSimpleItemStack("player-menu.background-1");
+        CfgPlayerMenu.BACKGROUND_2 = config.getSimpleItemStack("player-menu.background-2");
+        CfgPlayerMenu.TOTAL_EARNINGS = config.getSimpleItemStack("player-menu.total-earnings");
+        CfgPlayerMenu.TICKETS_BOUGHT = config.getSimpleItemStack("player-menu.tickets-bought");
+        CfgPlayerMenu.BACK = config.getSimpleItemStack("player-menu.back");
+        CfgPlayerMenu.BIGGEST_WIN = config.getSimpleItemStack("player-menu.biggest-win");
     }
 }

@@ -48,15 +48,15 @@ broadcast:
     start:
       - ""
       - "§a§lLOTTERY"
-      - "§fNew §elottery §fjust started! §7(§b%cost §fper ticket§7)"
+      - "§fNew §elottery §fjust started! §7(§b{cost} §fper ticket§7)"
       - "§8» §fUse §b/lottery §ffor more information!"
       - ""
     end:
       - ""
       - "§a§lLOTTERY"
       - "§eLottery §fjust ended!"
-      - "§8» §fWinner: §e%winner"
-      - "§8» §fAmount: §e%winAmount"
+      - "§8» §fWinner: §e{winner}"
+      - "§8» §fAmount: §e{winAmount}"
       - ""
     no-winner:
       - ""
@@ -69,7 +69,7 @@ broadcast:
       message: "§a§lLOTTERY: §fNew §elottery §fjust started! §b/lottery"
       duration: 40
     end:
-      message: "§a§lLOTTERY: §e%winner §fwon §e%winAmount§f!"
+      message: "§a§lLOTTERY: §e{winner} §fwon §e{winAmount}§f!"
       duration: 40
     no-winner:
       message: "§a§lLOTTERY: §eNoone participated."
@@ -83,7 +83,7 @@ broadcast:
       out: 10
     end:
       title: "§a§lLOTTERY"
-      subtitle: "§e%winner §fwon §e%winAmount§f!"
+      subtitle: "§e{winner} §fwon §e{winAmount}§f!"
       in: 10
       stay: 40
       out: 10
@@ -103,7 +103,7 @@ broadcast:
 main-menu:
   title: "§b§lLottery v${project.version}"
   player-head:
-    name: "§e%name"
+    name: "§e{name}"
     lore:
       - "§8► §fClick to see your statistics."
   background-1:
@@ -123,7 +123,7 @@ main-menu:
     name: "§e§lCURRENT LOTTERY"
     amount: 1
     lore:
-      - "§8► §fMoney in lottery: §b%amount"
+      - "§8► §fMoney in lottery: §b{amount}"
   instructions:
     type: "WRITABLE_BOOK"
     name: "§e§lINFORMATION"
@@ -172,7 +172,7 @@ main-menu:
     amount: 1
     lore:
       - "§8► §fTime to next draw is:"
-      - "§b%time"
+      - "§b{time}"
   admin:
     type: "REDSTONE_TORCH"
     name: "§c§lADMIN FUNCTIONS"
@@ -186,7 +186,7 @@ main-menu:
 list-menu:
   title: "§b§lLottery v${project.version} - List"
   heads:
-    name: "§e%name"
+    name: "§e{name}"
     lore:
       - "§8► §fClick to see §fplayer's statistics."
   background-1:
@@ -257,7 +257,7 @@ confirm-menu:
 player-menu:
   title: "§b§lLottery v${project.version}"
   player-head:
-    name: "§e%name"
+    name: "§e{name}"
     lore:
       - "§r"
   background-1:
@@ -277,19 +277,19 @@ player-menu:
     name: "§e§lTOTAL EARNINGS"
     amount: 1
     lore:
-      - "§8► §f%amount"
+      - "§8► §f{amount}"
   biggest-win:
     type: "EMERALD"
     name: "§e§lBIGGEST WINNINGS"
     amount: 1
     lore:
-      - "§8► §f%amount"
+      - "§8► §f{amount}"
   tickets-bought:
     type: "PAPER"
     name: "§e§lTICKETS BOUGHT"
     amount: 1
     lore:
-      - "§8► §f%amount in current lottery."
+      - "§8► §f{amount} in current lottery."
   back:
     type: "REDSTONE"
     name: "§c§lBACK"
@@ -323,11 +323,9 @@ admin-help:
   - "§e/alottery add <amount> §8» §fAdds money to lottery."
 
 lang:
-  PLAYER_WIN: "§aLottery §8» §fYou won §e%winAmount §ffrom lottery!"
-  NO_CONSOLE: "§aLottery §8» §fThis command is for in-game use only!"
-  NO_NUMBER: "§aLottery §8» §b%arg §fis not a number!"
-  BUY_SUCCESS: "§aLottery §8» §fYou have successfully bought §b%amount §fticket(s)!"
-  BUY_FAILURE: "§aLottery §8» §fYou can't buy §b%amount §fticket(s)!"
+  PLAYER_WIN: "§aLottery §8» §fYou won §e{winAmount} §ffrom lottery!"
+  BUY_SUCCESS: "§aLottery §8» §fYou have successfully bought §b{amount} §fticket(s)!"
+  BUY_FAILURE: "§aLottery §8» §fYou can't buy §b{amount} §fticket(s)!"
   RESTART_SUCCESS: "§aLottery §8» §bSuccessfully §frestarted lottery."
-  ADD_MONEY_SUCCESS: "§aLottery §8» §bSuccessfully §fadded §b%amount$ §fto lottery."
+  ADD_MONEY_SUCCESS: "§aLottery §8» §bSuccessfully §fadded §b{amount}$ §fto lottery."
 #|--------------------------------------------------------------------------------------------------------------------|#

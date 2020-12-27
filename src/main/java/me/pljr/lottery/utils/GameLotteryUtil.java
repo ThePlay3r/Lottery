@@ -4,9 +4,9 @@ import me.pljr.lottery.Lottery;
 import me.pljr.lottery.config.CfgBroadcast;
 import me.pljr.lottery.config.CfgSettings;
 import me.pljr.lottery.objects.CorePlayer;
-import me.pljr.pljrapi.objects.PLJRActionBar;
-import me.pljr.pljrapi.objects.PLJRTitle;
-import me.pljr.pljrapi.utils.VaultUtil;
+import me.pljr.pljrapispigot.objects.PLJRActionBar;
+import me.pljr.pljrapispigot.objects.PLJRTitle;
+import me.pljr.pljrapispigot.utils.VaultUtil;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -17,49 +17,49 @@ public class GameLotteryUtil {
 
     public static List<String> getChatStart() {
         List<String> broadcast = new ArrayList<>();
-        for (String message : CfgBroadcast.chatStart) {
-            broadcast.add(message.replace("%cost", CfgSettings.cost + ""));
+        for (String message : CfgBroadcast.CHAT_START) {
+            broadcast.add(message.replace("{cost}", CfgSettings.COST + ""));
         }
         return broadcast;
     }
 
     public static List<String> getChatEnd(String winner, int winAmount) {
         List<String> broadcast = new ArrayList<>();
-        for (String message : CfgBroadcast.chatEnd) {
-            broadcast.add(message.replace("%winner", winner).replace("%winAmount", winAmount + ""));
+        for (String message : CfgBroadcast.CHAT_END) {
+            broadcast.add(message.replace("{winner}", winner).replace("{winAmount}", winAmount + ""));
         }
         return broadcast;
     }
 
     public static PLJRActionBar getActionBarStart() {
-        return new PLJRActionBar(CfgBroadcast.actionBarStart.getMessage().replace("%cost", CfgSettings.cost + ""), CfgBroadcast.actionBarStart.getDuration());
+        return new PLJRActionBar(CfgBroadcast.ACTIONBAR_START.getMessage().replace("{cost}", CfgSettings.COST + ""), CfgBroadcast.ACTIONBAR_START.getDuration());
     }
 
     public static PLJRActionBar getActionBarEnd(String winner, int winAmount) {
-        return new PLJRActionBar(CfgBroadcast.actionBarEnd.getMessage().replace("%winner", winner).replace("%winAmount", winAmount + ""), CfgBroadcast.actionBarEnd.getDuration());
+        return new PLJRActionBar(CfgBroadcast.ACTIONBAR_END.getMessage().replace("{winner}", winner).replace("{winAmount}", winAmount + ""), CfgBroadcast.ACTIONBAR_END.getDuration());
     }
 
     public static PLJRTitle getTitleStart() {
         return new PLJRTitle(
-                CfgBroadcast.titleStart.getTitle().replace("%cost", CfgSettings.cost + ""),
-                CfgBroadcast.titleStart.getSubtitle().replace("%cost", CfgSettings.cost + ""),
-                CfgBroadcast.titleStart.getIn(), CfgBroadcast.titleStart.getStay(), CfgBroadcast.titleStart.getOut()
+                CfgBroadcast.TITLE_START.getTitle().replace("{cost}", CfgSettings.COST + ""),
+                CfgBroadcast.TITLE_START.getSubtitle().replace("{cost}", CfgSettings.COST + ""),
+                CfgBroadcast.TITLE_START.getIn(), CfgBroadcast.TITLE_START.getStay(), CfgBroadcast.TITLE_START.getOut()
         );
     }
 
     public static PLJRTitle getTitleEnd(String winner, int winAmount){
         return new PLJRTitle(
-                CfgBroadcast.titleEnd.getTitle().replace("%winner", winner).replace("%winAmount", winAmount + ""),
-                CfgBroadcast.titleEnd.getSubtitle().replace("%winner", winner).replace("%winAmount", winAmount + ""),
-                CfgBroadcast.titleEnd.getIn(), CfgBroadcast.titleEnd.getStay(), CfgBroadcast.titleEnd.getOut()
+                CfgBroadcast.TITLE_END.getTitle().replace("{winner}", winner).replace("{winAmount}", winAmount + ""),
+                CfgBroadcast.TITLE_END.getSubtitle().replace("{winner}", winner).replace("{winAmount}", winAmount + ""),
+                CfgBroadcast.TITLE_END.getIn(), CfgBroadcast.TITLE_END.getStay(), CfgBroadcast.TITLE_END.getOut()
         );
     }
 
     public static boolean buy(Player player, int amount){
         UUID playerId = player.getUniqueId();
-        int cost = amount*CfgSettings.cost;
+        int cost = amount*CfgSettings.COST;
         double pMoney = VaultUtil.getBalance(player);
-        if (CfgSettings.confirmation){
+        if (CfgSettings.CONFIRMATION){
             CorePlayer corePlayer = Lottery.getPlayerManager().getCorePlayer(playerId);
             corePlayer.setConfirmBuyAmount(amount);
             Lottery.getPlayerManager().setCorePlayer(playerId, corePlayer);
@@ -76,7 +76,7 @@ public class GameLotteryUtil {
         UUID playerId = player.getUniqueId();
         double pMoney = VaultUtil.getBalance(player);
         int amount = Lottery.getPlayerManager().getCorePlayer(playerId).getConfirmBuyAmount();
-        int cost = amount*CfgSettings.cost;
+        int cost = amount*CfgSettings.COST;
         if (pMoney >= cost){
             CorePlayer corePlayer = Lottery.getPlayerManager().getCorePlayer(playerId);
             VaultUtil.withdraw(player, cost);

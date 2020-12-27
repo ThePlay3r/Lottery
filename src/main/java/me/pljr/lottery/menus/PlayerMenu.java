@@ -3,66 +3,60 @@ package me.pljr.lottery.menus;
 import me.pljr.lottery.Lottery;
 import me.pljr.lottery.config.CfgPlayerMenu;
 import me.pljr.lottery.objects.CorePlayer;
-import me.pljr.pljrapi.utils.ItemStackUtil;
-import org.bukkit.Bukkit;
+import me.pljr.pljrapispigot.builders.GUIBuilder;
+import me.pljr.pljrapispigot.builders.ItemBuilder;
+import me.pljr.pljrapispigot.objects.GUI;
+import me.pljr.pljrapispigot.objects.GUIItem;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 
-public class PlayerMenu implements Listener {
+public class PlayerMenu {
 
-    public static void open(Player player, Player menuPlayer){
-        Inventory inventory = Bukkit.createInventory(player, 6*9, CfgPlayerMenu.title);
+    public static GUI get(Player player, Player menuPlayer){
+        GUIBuilder builder = new GUIBuilder(CfgPlayerMenu.TITLE, 6);
 
         CorePlayer corePlayer = Lottery.getPlayerManager().getCorePlayer(menuPlayer.getUniqueId());
 
-        inventory.setItem(0, CfgPlayerMenu.background1);
-        inventory.setItem(9, CfgPlayerMenu.background1);
-        inventory.setItem(18, CfgPlayerMenu.background1);
-        inventory.setItem(19, CfgPlayerMenu.background1);
-        inventory.setItem(28, CfgPlayerMenu.background1);
-        inventory.setItem(34, CfgPlayerMenu.background1);
-        inventory.setItem(25, CfgPlayerMenu.background1);
-        inventory.setItem(35, CfgPlayerMenu.background1);
-        inventory.setItem(44, CfgPlayerMenu.background1);
-        inventory.setItem(53, CfgPlayerMenu.background1);
+        builder.setItem(0, CfgPlayerMenu.BACKGROUND_1);
+        builder.setItem(9, CfgPlayerMenu.BACKGROUND_1);
+        builder.setItem(18, CfgPlayerMenu.BACKGROUND_1);
+        builder.setItem(19, CfgPlayerMenu.BACKGROUND_1);
+        builder.setItem(28, CfgPlayerMenu.BACKGROUND_1);
+        builder.setItem(34, CfgPlayerMenu.BACKGROUND_1);
+        builder.setItem(25, CfgPlayerMenu.BACKGROUND_1);
+        builder.setItem(35, CfgPlayerMenu.BACKGROUND_1);
+        builder.setItem(44, CfgPlayerMenu.BACKGROUND_1);
+        builder.setItem(53, CfgPlayerMenu.BACKGROUND_1);
 
-        inventory.setItem(5, CfgPlayerMenu.background2);
-        inventory.setItem(6, CfgPlayerMenu.background2);
-        inventory.setItem(11, CfgPlayerMenu.background2);
-        inventory.setItem(12, CfgPlayerMenu.background2);
-        inventory.setItem(17, CfgPlayerMenu.background2);
-        inventory.setItem(26, CfgPlayerMenu.background2);
-        inventory.setItem(27, CfgPlayerMenu.background2);
-        inventory.setItem(36, CfgPlayerMenu.background2);
-        inventory.setItem(47, CfgPlayerMenu.background2);
-        inventory.setItem(48, CfgPlayerMenu.background2);
-        inventory.setItem(41, CfgPlayerMenu.background2);
-        inventory.setItem(42, CfgPlayerMenu.background2);
+        builder.setItem(5, CfgPlayerMenu.BACKGROUND_2);
+        builder.setItem(6, CfgPlayerMenu.BACKGROUND_2);
+        builder.setItem(11, CfgPlayerMenu.BACKGROUND_2);
+        builder.setItem(12, CfgPlayerMenu.BACKGROUND_2);
+        builder.setItem(17, CfgPlayerMenu.BACKGROUND_2);
+        builder.setItem(26, CfgPlayerMenu.BACKGROUND_2);
+        builder.setItem(27, CfgPlayerMenu.BACKGROUND_2);
+        builder.setItem(36, CfgPlayerMenu.BACKGROUND_2);
+        builder.setItem(47, CfgPlayerMenu.BACKGROUND_2);
+        builder.setItem(48, CfgPlayerMenu.BACKGROUND_2);
+        builder.setItem(41, CfgPlayerMenu.BACKGROUND_2);
+        builder.setItem(42, CfgPlayerMenu.BACKGROUND_2);
 
-        inventory.setItem(22, ItemStackUtil.createHead(menuPlayer.getName(), CfgPlayerMenu.playerHeadName.replace("%name", menuPlayer.getName()), 1));
-        inventory.setItem(29, ItemStackUtil.replaceLore(CfgPlayerMenu.ticketsBought, "%amount", corePlayer.getCurrentTickets()+""));
-        inventory.setItem(31, ItemStackUtil.replaceLore(CfgPlayerMenu.biggestWin, "%amount", corePlayer.getWonAmountMax()+""));
-        inventory.setItem(33, ItemStackUtil.replaceLore(CfgPlayerMenu.totalEarnings, "%amount", corePlayer.getWonAmountTotal()+""));
-        inventory.setItem(40, CfgPlayerMenu.back);
+        String playerName = menuPlayer.getName();
 
-        player.openInventory(inventory);
-    }
+        builder.setItem(22, new ItemBuilder(CfgPlayerMenu.PLAYER_HEAD)
+                .withOwner(playerName)
+                .replaceName("{name}", playerName)
+                .create());
+        builder.setItem(29, new ItemBuilder(CfgPlayerMenu.TICKETS_BOUGHT)
+                .replaceLore("{amount}", corePlayer.getCurrentTickets()+"")
+                .create());
+        builder.setItem(31, new ItemBuilder(CfgPlayerMenu.BIGGEST_WIN)
+                .replaceLore("{amount}", corePlayer.getWonAmountMax()+"")
+                .create());
+        builder.setItem(33, new ItemBuilder(CfgPlayerMenu.TOTAL_EARNINGS)
+                .replaceLore("{amount}", corePlayer.getWonAmountTotal()+"")
+                .create());
+        builder.setItem(40, new GUIItem(CfgPlayerMenu.BACK, run -> player.closeInventory()));
 
-    @EventHandler
-    public static void onClick(InventoryClickEvent event){
-        if (event.getView().getTitle().equals(CfgPlayerMenu.title)){
-            event.setCancelled(true);
-            if (event.getWhoClicked() instanceof Player){
-                Player player = (Player) event.getWhoClicked();
-                int slot = event.getSlot();
-                if (slot == 40){
-                    player.closeInventory();
-                    MainMenu.open(player);
-                }
-            }
-        }
+        return builder.create();
     }
 }
