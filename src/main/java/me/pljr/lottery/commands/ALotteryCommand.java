@@ -3,9 +3,6 @@ package me.pljr.lottery.commands;
 import me.pljr.lottery.Lottery;
 import me.pljr.lottery.config.Lang;
 import me.pljr.pljrapispigot.utils.CommandUtil;
-import me.pljr.pljrapispigot.utils.NumberUtil;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
