@@ -75,8 +75,8 @@ public final class Lottery extends JavaPlugin {
     }
 
     private void setupCommands(){
-        getCommand("lottery").setExecutor(new LotteryCommand());
-        getCommand("alottery").setExecutor(new ALotteryCommand());
+        new LotteryCommand().registerCommand(this);
+        new ALotteryCommand().registerCommand(this);
     }
 
     public static Lottery getInstance() {
