@@ -39,63 +39,6 @@ settings:
   countdown: 500 #-> How long should it take for a lottery to end? (In seconds)
 #|--------------------------------------------------------------------------------------------------------------------|#
 
-####################\
-# Broadcast Setup ####################################################\
-################### Here, you can customize the looks of broadcasts. # \
-                  ####################################################  \
-broadcast:
-  chat:
-    start:
-      - ""
-      - "§a§lLOTTERY"
-      - "§fNew §elottery §fjust started! §7(§b{cost} §fper ticket§7)"
-      - "§8» §fUse §b/lottery §ffor more information!"
-      - ""
-    end:
-      - ""
-      - "§a§lLOTTERY"
-      - "§eLottery §fjust ended!"
-      - "§8» §fWinner: §e{winner}"
-      - "§8» §fAmount: §e{winAmount}"
-      - ""
-    no-winner:
-      - ""
-      - "§a§lLOTTERY"
-      - "§eLottery §fjust ended!"
-      - "§8» §fNoone participated."
-      - ""
-  actionbar:
-    start:
-      message: "§a§lLOTTERY: §fNew §elottery §fjust started! §b/lottery"
-      duration: 40
-    end:
-      message: "§a§lLOTTERY: §e{winner} §fwon §e{winAmount}§f!"
-      duration: 40
-    no-winner:
-      message: "§a§lLOTTERY: §eNoone participated."
-      duration: 40
-  title:
-    start:
-      title: "§a§lLOTTERY"
-      subtitle: "§fNew §elottery §fjust started! §b/lottery"
-      in: 10
-      stay: 40
-      out: 10
-    end:
-      title: "§a§lLOTTERY"
-      subtitle: "§e{winner} §fwon §e{winAmount}§f!"
-      in: 10
-      stay: 40
-      out: 10
-    no-winner:
-      title: "§a§lLOTTERY"
-      subtitle: "§eNoone participated."
-      in: 10
-      stay: 40
-      out: 10
-
-#|--------------------------------------------------------------------------------------------------------------------|#
-
 ###############\
 # Menus Setup ###########################################################\
 ############### Here, you can customize the looks of all in-game menus. # \
@@ -296,36 +239,4 @@ player-menu:
     amount: 1
     lore:
       - "§8► §fClick to go to the main menu."
-#|--------------------------------------------------------------------------------------------------------------------|#
-
-##############\
-# Lang Setup ################################################################\
-############## Here, you can customize messages, send by the plugin itself. # \
-             ################################################################  \
-
-help:
-  - ""
-  - "§a§lLottery Help v${project.version}"
-  - ""
-  - "§e/lottery §8» §fOpens the main GUI."
-  - "§e/lottery help §8» §fDisplays this message."
-  - "§e/lottery buy <amount> §8» §fBuys tickets, if you have enough money."
-  - "§e/lottery list §8» §fOpens GUI with current players in lottery."
-  - "§e/lottery stats <player> §8» §fDisplays player's statistics."
-
-admin-help:
-  - ""
-  - "§a§lLottery Admin-Help v${project.version}"
-  - ""
-  - "§e/alottery restart §8» §fStops current and starts a brand new lottery."
-  - "§e/alottery help §8» §fDisplays this message."
-  - "§e/alottery draw §8» §fEnds the lottery and selects winner."
-  - "§e/alottery add <amount> §8» §fAdds money to lottery."
-
-lang:
-  PLAYER_WIN: "§aLottery §8» §fYou won §e{winAmount} §ffrom lottery!"
-  BUY_SUCCESS: "§aLottery §8» §fYou have successfully bought §b{amount} §fticket(s)!"
-  BUY_FAILURE: "§aLottery §8» §fYou can't buy §b{amount} §fticket(s)!"
-  RESTART_SUCCESS: "§aLottery §8» §bSuccessfully §frestarted lottery."
-  ADD_MONEY_SUCCESS: "§aLottery §8» §bSuccessfully §fadded §b{amount}$ §fto lottery."
 #|--------------------------------------------------------------------------------------------------------------------|#

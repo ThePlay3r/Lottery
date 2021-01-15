@@ -37,13 +37,11 @@ public final class Lottery extends JavaPlugin {
     private void setupConfig(){
         saveDefaultConfig();
         configManager = new ConfigManager(this, "config.yml");
-        CfgConfirmMenu.load(configManager);
-        CfgListMenu.load(configManager);
-        CfgMainMenu.load(configManager);
-        CfgPlayerMenu.load(configManager);
+        MenuItemType.load(new ConfigManager(this, "menus.yml"));
         CfgSettings.load(configManager);
-        Lang.load(configManager);
-        CfgBroadcast.load(configManager);
+        Lang.load(new ConfigManager(this, "lang.yml"));
+        ActionBarType.load(new ConfigManager(this, "actionbars.yml"));
+        TitleType.load(new ConfigManager(this, "titles.yml"));
     }
 
     private void setupManagers(){

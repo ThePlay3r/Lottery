@@ -1,9 +1,13 @@
 package me.pljr.lottery.utils;
 
 import me.pljr.lottery.Lottery;
-import me.pljr.lottery.config.CfgBroadcast;
+import me.pljr.lottery.config.ActionBarType;
 import me.pljr.lottery.config.CfgSettings;
+import me.pljr.lottery.config.Lang;
+import me.pljr.lottery.config.TitleType;
 import me.pljr.lottery.objects.CorePlayer;
+import me.pljr.pljrapispigot.builders.ActionBarBuilder;
+import me.pljr.pljrapispigot.builders.TitleBuilder;
 import me.pljr.pljrapispigot.objects.PLJRActionBar;
 import me.pljr.pljrapispigot.objects.PLJRTitle;
 import me.pljr.pljrapispigot.utils.VaultUtil;
@@ -15,44 +19,32 @@ import java.util.UUID;
 
 public class GameLotteryUtil {
 
-    public static List<String> getChatStart() {
-        List<String> broadcast = new ArrayList<>();
-        for (String message : CfgBroadcast.CHAT_START) {
-            broadcast.add(message.replace("{cost}", CfgSettings.COST + ""));
-        }
-        return broadcast;
+    public static String getChatStart() {
+        return Lang.BROADCAST_START.get().replace("{cost}", CfgSettings.COST + "");
     }
 
-    public static List<String> getChatEnd(String winner, int winAmount) {
-        List<String> broadcast = new ArrayList<>();
-        for (String message : CfgBroadcast.CHAT_END) {
-            broadcast.add(message.replace("{winner}", winner).replace("{winAmount}", winAmount + ""));
-        }
-        return broadcast;
+    public static String getChatEnd(String winner, int winAmount) {
+        return Lang.BROADCAST_END.get().replace("{winner}", winner).replace("{winAmount}", winAmount + "");
     }
 
     public static PLJRActionBar getActionBarStart() {
-        return new PLJRActionBar(CfgBroadcast.ACTIONBAR_START.getMessage().replace("{cost}", CfgSettings.COST + ""), CfgBroadcast.ACTIONBAR_START.getDuration());
+        return new ActionBarBuilder(ActionBarType.BROADCAST_START.get()).replaceMessage("{cost}", CfgSettings.COST + "").create();
     }
 
     public static PLJRActionBar getActionBarEnd(String winner, int winAmount) {
-        return new PLJRActionBar(CfgBroadcast.ACTIONBAR_END.getMessage().replace("{winner}", winner).replace("{winAmount}", winAmount + ""), CfgBroadcast.ACTIONBAR_END.getDuration());
+        return new ActionBarBuilder(ActionBarType.BROADCAST_END.get())
+                .replaceMessage("{winAmount}", winAmount + "")
+                .replaceMessage("{winner}", winner).create();
     }
 
     public static PLJRTitle getTitleStart() {
-        return new PLJRTitle(
-                CfgBroadcast.TITLE_START.getTitle().replace("{cost}", CfgSettings.COST + ""),
-                CfgBroadcast.TITLE_START.getSubtitle().replace("{cost}", CfgSettings.COST + ""),
-                CfgBroadcast.TITLE_START.getIn(), CfgBroadcast.TITLE_START.getStay(), CfgBroadcast.TITLE_START.getOut()
-        );
+        return new TitleBuilder(TitleType.BROADCAST_START.get()).replaceSubtitle("{cost}", CfgSettings.COST + "").create();
     }
 
     public static PLJRTitle getTitleEnd(String winner, int winAmount){
-        return new PLJRTitle(
-                CfgBroadcast.TITLE_END.getTitle().replace("{winner}", winner).replace("{winAmount}", winAmount + ""),
-                CfgBroadcast.TITLE_END.getSubtitle().replace("{winner}", winner).replace("{winAmount}", winAmount + ""),
-                CfgBroadcast.TITLE_END.getIn(), CfgBroadcast.TITLE_END.getStay(), CfgBroadcast.TITLE_END.getOut()
-        );
+        return new TitleBuilder(TitleType.BROADCAST_END.get())
+                .replaceSubtitle("{winAmount}", winAmount + "")
+                .replaceSubtitle("{winner}", winner).create();
     }
 
     public static boolean buy(Player player, int amount){

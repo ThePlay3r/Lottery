@@ -1,7 +1,8 @@
 package me.pljr.lottery.menus;
 
 import me.pljr.lottery.Lottery;
-import me.pljr.lottery.config.CfgListMenu;
+import me.pljr.lottery.config.Lang;
+import me.pljr.lottery.config.MenuItemType;
 import me.pljr.lottery.managers.GameLotteryManager;
 import me.pljr.pljrapispigot.builders.GUIBuilder;
 import me.pljr.pljrapispigot.builders.ItemBuilder;
@@ -19,7 +20,7 @@ import java.util.List;
 public class ListMenu {
 
     public static GUI get(Player player){
-        GUIBuilder builder = new GUIBuilder(CfgListMenu.TITLE, 6);
+        GUIBuilder builder = new GUIBuilder(Lang.MENU_TITLE.get(), 6);
         GameLotteryManager lotteryManager = Lottery.getGameLotteryManager();
 
         int slot = 0;
@@ -28,7 +29,7 @@ public class ListMenu {
             if (slot>44) break;
             String lotteryPlayerName = lotteryPlayer.getName();
             if (used.contains(lotteryPlayerName)) continue;
-            ItemStack item = new ItemBuilder(CfgListMenu.HEADS)
+            ItemStack item = new ItemBuilder(MenuItemType.LIST_HEADS.get())
                     .withOwner(lotteryPlayerName)
                     .replaceName("{name}", lotteryPlayerName)
                     .create();
@@ -44,14 +45,14 @@ public class ListMenu {
             slot++;
         }
 
-        builder.setItem(45, CfgListMenu.BACKGROUND_1);
-        builder.setItem(46, CfgListMenu.BACKGROUND_1);
-        builder.setItem(47, CfgListMenu.BACKGROUND_2);
-        builder.setItem(51, CfgListMenu.BACKGROUND_2);
-        builder.setItem(52, CfgListMenu.BACKGROUND_1);
-        builder.setItem(53, CfgListMenu.BACKGROUND_1);
+        builder.setItem(45, MenuItemType.LIST_BACKGROUND_1.get());
+        builder.setItem(46, MenuItemType.LIST_BACKGROUND_1.get());
+        builder.setItem(47, MenuItemType.LIST_BACKGROUND_2.get());
+        builder.setItem(51, MenuItemType.LIST_BACKGROUND_2.get());
+        builder.setItem(52, MenuItemType.LIST_BACKGROUND_1.get());
+        builder.setItem(53, MenuItemType.LIST_BACKGROUND_1.get());
 
-        builder.setItem(49, new GUIItem(CfgListMenu.BACK, run -> MainMenu.get(player).open(player)));
+        builder.setItem(49, new GUIItem(MenuItemType.LIST_BACK.get(), run -> MainMenu.get(player).open(player)));
 
         return builder.create();
     }

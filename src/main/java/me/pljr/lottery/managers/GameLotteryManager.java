@@ -1,9 +1,10 @@
 package me.pljr.lottery.managers;
 
 import me.pljr.lottery.Lottery;
-import me.pljr.lottery.config.CfgBroadcast;
+import me.pljr.lottery.config.ActionBarType;
 import me.pljr.lottery.config.CfgSettings;
 import me.pljr.lottery.config.Lang;
+import me.pljr.lottery.config.TitleType;
 import me.pljr.lottery.objects.CorePlayer;
 import me.pljr.lottery.objects.GameLottery;
 import me.pljr.lottery.utils.GameLotteryUtil;
@@ -66,13 +67,13 @@ public class GameLotteryManager {
         if (selectWinner){
             if (currentLottery.getPlayers().size() == 0){
                 if (CfgSettings.BROADCAST_CHAT){
-                    ChatUtil.broadcast(CfgBroadcast.CHAT_NO_WINNER, "", CfgSettings.BUNGEE);
+                    ChatUtil.broadcast(Lang.BROADCAST_NO_WINNER.get(), "", CfgSettings.BUNGEE);
                 }
                 if (CfgSettings.BROADCAST_ACTIONBAR){
-                    ActionBarManager.broadcast(CfgBroadcast.ACTIONBAR_NO_WINNER);
+                    ActionBarType.BROADCAST_NO_WINNER.get().broadcast();
                 }
                 if (CfgSettings.BROADCAST_TITLE){
-                    TitleManager.broadcast(CfgBroadcast.TITLE_NO_WINNER);
+                    TitleType.BROADCAST_NO_WINNER.get().broadcast();
                 }
             }else{
                 Player winner = currentLottery.getPlayers().get(new Random().nextInt(currentLottery.getPlayers().size()));

@@ -29,7 +29,7 @@ public class LotteryCommand extends CommandUtil {
             // /lottery help
             if (args[0].equalsIgnoreCase("help")){
                 if (!checkPerm(player, "lottery.help")) return;
-                sendMessage(player, Lang.HELP);
+                sendMessage(player, Lang.HELP.get());
                 return;
             }
 
@@ -75,6 +75,6 @@ public class LotteryCommand extends CommandUtil {
             }
         }
 
-        sendMessage(player, Lang.HELP);
+        sendMessage(player, Lang.HELP.get());
     }
 }

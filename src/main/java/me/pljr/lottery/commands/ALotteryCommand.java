@@ -16,8 +16,8 @@ public class ALotteryCommand extends CommandUtil {
     public void onPlayerCommand(Player player, String[] args){
         if (args.length == 1){
             // /aloterry help
-            if (args.length < 1 || args[0].equalsIgnoreCase("help")){
-                sendMessage(player, Lang.ADMIN_HELP);
+            if (args[0].equalsIgnoreCase("help")){
+                sendMessage(player, Lang.ADMIN_HELP.get());
                 return;
             }
 
@@ -48,15 +48,15 @@ public class ALotteryCommand extends CommandUtil {
                 return;
             }
         }
-        sendMessage(player, Lang.ADMIN_HELP);
+        sendMessage(player, Lang.ADMIN_HELP.get());
     }
 
     @Override
     public void onConsoleCommand(ConsoleCommandSender sender, String[] args){
         if (args.length == 1){
             // /aloterry help
-            if (args.length < 1 || args[0].equalsIgnoreCase("help")){
-                sendMessage(sender, Lang.ADMIN_HELP);
+            if (args[0].equalsIgnoreCase("help")){
+                sendMessage(sender, Lang.ADMIN_HELP.get());
                 return;
             }
 
@@ -86,6 +86,6 @@ public class ALotteryCommand extends CommandUtil {
             }
         }
 
-        sendMessage(sender, Lang.ADMIN_HELP);
+        sendMessage(sender, Lang.ADMIN_HELP.get());
     }
 }

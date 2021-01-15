@@ -1,8 +1,8 @@
 package me.pljr.lottery.menus;
 
 import me.pljr.lottery.Lottery;
-import me.pljr.lottery.config.CfgConfirmMenu;
 import me.pljr.lottery.config.Lang;
+import me.pljr.lottery.config.MenuItemType;
 import me.pljr.lottery.objects.CorePlayer;
 import me.pljr.lottery.utils.GameLotteryUtil;
 import me.pljr.pljrapispigot.builders.GUIBuilder;
@@ -17,28 +17,28 @@ import java.util.UUID;
 public class ConfirmMenu {
 
     public static GUI get(Player player){
-        GUIBuilder builder = new GUIBuilder(CfgConfirmMenu.TITLE, 6);
+        GUIBuilder builder = new GUIBuilder(Lang.MENU_TITLE.get(), 6);
 
-        builder.setItem(18, CfgConfirmMenu.BACKGROUND);
-        builder.setItem(19, CfgConfirmMenu.BACKGROUND);
-        builder.setItem(10, CfgConfirmMenu.BACKGROUND);
-        builder.setItem(11, CfgConfirmMenu.BACKGROUND);
-        builder.setItem(12, CfgConfirmMenu.BACKGROUND);
-        builder.setItem(13, CfgConfirmMenu.BACKGROUND);
-        builder.setItem(4, CfgConfirmMenu.BACKGROUND);
-        builder.setItem(5, CfgConfirmMenu.BACKGROUND);
-        builder.setItem(6, CfgConfirmMenu.BACKGROUND);
-        builder.setItem(7, CfgConfirmMenu.BACKGROUND);
-        builder.setItem(8, CfgConfirmMenu.BACKGROUND);
-        builder.setItem(49, CfgConfirmMenu.BACKGROUND);
-        builder.setItem(47, CfgConfirmMenu.BACKGROUND);
-        builder.setItem(46, CfgConfirmMenu.BACKGROUND);
-        builder.setItem(45, CfgConfirmMenu.BACKGROUND);
-        builder.setItem(40, CfgConfirmMenu.BACKGROUND);
-        builder.setItem(41, CfgConfirmMenu.BACKGROUND);
-        builder.setItem(42, CfgConfirmMenu.BACKGROUND);
-        builder.setItem(43, CfgConfirmMenu.BACKGROUND);
-        builder.setItem(44, CfgConfirmMenu.BACKGROUND);
+        builder.setItem(18, MenuItemType.CONFIRM_BACKGROUND.get());
+        builder.setItem(19, MenuItemType.CONFIRM_BACKGROUND.get());
+        builder.setItem(10, MenuItemType.CONFIRM_BACKGROUND.get());
+        builder.setItem(11, MenuItemType.CONFIRM_BACKGROUND.get());
+        builder.setItem(12, MenuItemType.CONFIRM_BACKGROUND.get());
+        builder.setItem(13, MenuItemType.CONFIRM_BACKGROUND.get());
+        builder.setItem(4, MenuItemType.CONFIRM_BACKGROUND.get());
+        builder.setItem(5, MenuItemType.CONFIRM_BACKGROUND.get());
+        builder.setItem(6, MenuItemType.CONFIRM_BACKGROUND.get());
+        builder.setItem(7, MenuItemType.CONFIRM_BACKGROUND.get());
+        builder.setItem(8, MenuItemType.CONFIRM_BACKGROUND.get());
+        builder.setItem(49, MenuItemType.CONFIRM_BACKGROUND.get());
+        builder.setItem(47, MenuItemType.CONFIRM_BACKGROUND.get());
+        builder.setItem(46, MenuItemType.CONFIRM_BACKGROUND.get());
+        builder.setItem(45, MenuItemType.CONFIRM_BACKGROUND.get());
+        builder.setItem(40, MenuItemType.CONFIRM_BACKGROUND.get());
+        builder.setItem(41, MenuItemType.CONFIRM_BACKGROUND.get());
+        builder.setItem(42, MenuItemType.CONFIRM_BACKGROUND.get());
+        builder.setItem(43, MenuItemType.CONFIRM_BACKGROUND.get());
+        builder.setItem(44, MenuItemType.CONFIRM_BACKGROUND.get());
 
         GUIManager.ClickRunnable confirm = run -> {
             UUID playerId = player.getUniqueId();
@@ -56,8 +56,8 @@ public class ConfirmMenu {
             MainMenu.get(player).open(player);
         };
 
-        GUIItem confirm1 = new GUIItem(CfgConfirmMenu.CONFIRM_1, confirm);
-        GUIItem confirm2 = new GUIItem(CfgConfirmMenu.CONFIRM_2, confirm);
+        GUIItem confirm1 = new GUIItem(MenuItemType.CONFIRM_CONFIRM_1.get(), confirm);
+        GUIItem confirm2 = new GUIItem(MenuItemType.CONFIRM_CONFIRM_2.get(), confirm);
 
         builder.setItem(19, confirm2);
         builder.setItem(20, confirm2);
@@ -69,8 +69,8 @@ public class ConfirmMenu {
         builder.setItem(30, confirm1);
         builder.setItem(21, confirm1);
 
-        GUIItem decline1 = new GUIItem(CfgConfirmMenu.DECLINE_1, confirm);
-        GUIItem decline2 = new GUIItem(CfgConfirmMenu.DECLINE_2, confirm);
+        GUIItem decline1 = new GUIItem(MenuItemType.CONFIRM_DECLINE_1.get(), decline);
+        GUIItem decline2 = new GUIItem(MenuItemType.CONFIRM_DECLINE_2.get(), decline);
 
         builder.setItem(34, decline2);
         builder.setItem(33, decline2);
@@ -82,8 +82,8 @@ public class ConfirmMenu {
         builder.setItem(16, decline1);
         builder.setItem(15, decline1);
 
-        builder.setItem(22, CfgConfirmMenu.INFORMATION);
-        builder.setItem(31, new GUIItem(CfgConfirmMenu.BACK, decline));
+        builder.setItem(22, MenuItemType.CONFIRM_INFORMATION.get());
+        builder.setItem(31, new GUIItem(MenuItemType.CONFIRM_BACK.get(), decline));
 
         return builder.create();
     }

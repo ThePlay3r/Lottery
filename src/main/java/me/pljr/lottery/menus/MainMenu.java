@@ -1,7 +1,8 @@
 package me.pljr.lottery.menus;
 
 import me.pljr.lottery.Lottery;
-import me.pljr.lottery.config.CfgMainMenu;
+import me.pljr.lottery.config.Lang;
+import me.pljr.lottery.config.MenuItemType;
 import me.pljr.lottery.managers.GameLotteryManager;
 import me.pljr.pljrapispigot.builders.GUIBuilder;
 import me.pljr.pljrapispigot.builders.ItemBuilder;
@@ -15,39 +16,39 @@ import org.bukkit.event.inventory.ClickType;
 public class MainMenu {
 
     public static GUI get(Player player){
-        GUIBuilder builder = new GUIBuilder(CfgMainMenu.TITLE, 6);
+        GUIBuilder builder = new GUIBuilder(Lang.MENU_TITLE.get(), 6);
 
         GameLotteryManager lotteryManager = Lottery.getGameLotteryManager();
         String playerName = player.getName();
 
-        builder.setItem(0, CfgMainMenu.BACKGROUND_1);
-        builder.setItem(1, CfgMainMenu.BACKGROUND_1);
-        builder.setItem(9, CfgMainMenu.BACKGROUND_1);
-        builder.setItem(15, CfgMainMenu.BACKGROUND_1);
-        builder.setItem(16, CfgMainMenu.BACKGROUND_1);
-        builder.setItem(25, CfgMainMenu.BACKGROUND_1);
-        builder.setItem(28, CfgMainMenu.BACKGROUND_1);
-        builder.setItem(37, CfgMainMenu.BACKGROUND_1);
-        builder.setItem(38, CfgMainMenu.BACKGROUND_1);
-        builder.setItem(44, CfgMainMenu.BACKGROUND_1);
-        builder.setItem(52, CfgMainMenu.BACKGROUND_1);
-        builder.setItem(53, CfgMainMenu.BACKGROUND_1);
+        builder.setItem(0, MenuItemType.MAIN_BACKGROUND_1.get());
+        builder.setItem(1, MenuItemType.MAIN_BACKGROUND_1.get());
+        builder.setItem(9, MenuItemType.MAIN_BACKGROUND_1.get());
+        builder.setItem(15, MenuItemType.MAIN_BACKGROUND_1.get());
+        builder.setItem(16, MenuItemType.MAIN_BACKGROUND_1.get());
+        builder.setItem(25, MenuItemType.MAIN_BACKGROUND_1.get());
+        builder.setItem(28, MenuItemType.MAIN_BACKGROUND_1.get());
+        builder.setItem(37, MenuItemType.MAIN_BACKGROUND_1.get());
+        builder.setItem(38, MenuItemType.MAIN_BACKGROUND_1.get());
+        builder.setItem(44, MenuItemType.MAIN_BACKGROUND_1.get());
+        builder.setItem(52, MenuItemType.MAIN_BACKGROUND_1.get());
+        builder.setItem(53, MenuItemType.MAIN_BACKGROUND_1.get());
 
-        builder.setItem(7, CfgMainMenu.BACKGROUND_2);
-        builder.setItem(8, CfgMainMenu.BACKGROUND_2);
-        builder.setItem(11, CfgMainMenu.BACKGROUND_2);
-        builder.setItem(12, CfgMainMenu.BACKGROUND_2);
-        builder.setItem(18, CfgMainMenu.BACKGROUND_2);
-        builder.setItem(27, CfgMainMenu.BACKGROUND_2);
-        builder.setItem(26, CfgMainMenu.BACKGROUND_2);
-        builder.setItem(35, CfgMainMenu.BACKGROUND_2);
-        builder.setItem(41, CfgMainMenu.BACKGROUND_2);
-        builder.setItem(42, CfgMainMenu.BACKGROUND_2);
-        builder.setItem(45, CfgMainMenu.BACKGROUND_2);
-        builder.setItem(46, CfgMainMenu.BACKGROUND_2);
+        builder.setItem(7, MenuItemType.MAIN_BACKGROUND_2.get());
+        builder.setItem(8, MenuItemType.MAIN_BACKGROUND_2.get());
+        builder.setItem(11, MenuItemType.MAIN_BACKGROUND_2.get());
+        builder.setItem(12, MenuItemType.MAIN_BACKGROUND_2.get());
+        builder.setItem(18, MenuItemType.MAIN_BACKGROUND_2.get());
+        builder.setItem(27, MenuItemType.MAIN_BACKGROUND_2.get());
+        builder.setItem(26, MenuItemType.MAIN_BACKGROUND_2.get());
+        builder.setItem(35, MenuItemType.MAIN_BACKGROUND_2.get());
+        builder.setItem(41, MenuItemType.MAIN_BACKGROUND_2.get());
+        builder.setItem(42, MenuItemType.MAIN_BACKGROUND_2.get());
+        builder.setItem(45, MenuItemType.MAIN_BACKGROUND_2.get());
+        builder.setItem(46, MenuItemType.MAIN_BACKGROUND_2.get());
 
         builder.setItem(4, new GUIItem(
-                new ItemBuilder(CfgMainMenu.PLAYER_HEAD)
+                new ItemBuilder(MenuItemType.MAIN_HEAD.get())
                         .withOwner(playerName)
                         .replaceName("{name}", playerName)
                         .create(),
@@ -56,17 +57,17 @@ public class MainMenu {
                     Bukkit.dispatchCommand(player, "lottery stats");
                 }
         ));
-        builder.setItem(20, new ItemBuilder(CfgMainMenu.CURRENT_MONEY)
+        builder.setItem(20, new ItemBuilder(MenuItemType.MAIN_CURRENT_MONEY.get())
                 .replaceLore("{amount}", lotteryManager.getCurrentLottery().getAmount()+"")
                 .create());
-        builder.setItem(29, new GUIItem(CfgMainMenu.LIST,
+        builder.setItem(29, new GUIItem(MenuItemType.MAIN_LIST.get(),
                 run -> {
                     player.closeInventory();
                     Bukkit.dispatchCommand(player, "lottery list");
                 }));
-        builder.setItem(22, CfgMainMenu.INSTRUCTIONS);
-        builder.setItem(31, CfgMainMenu.HELP);
-        builder.setItem(24, new GUIItem(CfgMainMenu.BUY,
+        builder.setItem(22, MenuItemType.MAIN_INSTRUCTIONS.get());
+        builder.setItem(31, MenuItemType.MAIN_HELP.get());
+        builder.setItem(24, new GUIItem(MenuItemType.MAIN_BUY.get(),
                 run -> {
                     ClickType type = run.getClick();
                     if (type.equals(ClickType.LEFT)){
@@ -77,7 +78,7 @@ public class MainMenu {
                         Bukkit.dispatchCommand(player, "lottery buy 30");
                     }
                 }));
-        builder.setItem(33, new ItemBuilder(CfgMainMenu.TIME_LEFT)
+        builder.setItem(33, new ItemBuilder(MenuItemType.MAIN_TIME_LEFT.get())
                 .replaceLore("{time}", FormatUtil.formatTime(lotteryManager.getTime()))
                 .create());
 
