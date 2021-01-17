@@ -27,6 +27,7 @@ public enum ActionBarType {
             }
             actionbars.put(actionBarType, config.getPLJRActionBar(actionBarType.toString()));
         }
+        config.save();
     }
 
     public PLJRActionBar get(){

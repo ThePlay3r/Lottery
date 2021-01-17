@@ -27,6 +27,7 @@ public enum TitleType {
             }
             titles.put(titleType, config.getPLJRTitle(titleType.toString()));
         }
+        config.save();
     }
 
     public PLJRTitle get(){
