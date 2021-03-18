@@ -37,6 +37,7 @@ settings:
   restart-on-end: true #-> Should we start a new lottery after ending one?
   cost: 100 #-> How much should 1 ticket cost?
   countdown: 500 #-> How long should it take for a lottery to end? (In seconds)
+  cache-players: true # Should we save player data in memory? (false = loading on each join)
 #|--------------------------------------------------------------------------------------------------------------------|#
 
 ###############\

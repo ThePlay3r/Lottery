@@ -1,6 +1,6 @@
 package me.pljr.lottery.menus;
 
-import me.pljr.lottery.Lottery;
+import lombok.Getter;
 import me.pljr.lottery.config.Lang;
 import me.pljr.lottery.config.MenuItemType;
 import me.pljr.lottery.managers.GameLotteryManager;
@@ -15,10 +15,11 @@ import org.bukkit.event.inventory.ClickType;
 
 public class MainMenu {
 
-    public static GUI get(Player player){
+    @Getter private final GUI gui;
+
+    public MainMenu(Player player, GameLotteryManager lotteryManager){
         GUIBuilder builder = new GUIBuilder(Lang.MENU_TITLE.get(), 6);
 
-        GameLotteryManager lotteryManager = Lottery.getGameLotteryManager();
         String playerName = player.getName();
 
         builder.setItem(0, MenuItemType.MAIN_BACKGROUND_1.get());
@@ -52,36 +53,39 @@ public class MainMenu {
                         .withOwner(playerName)
                         .replaceName("{name}", playerName)
                         .create(),
-                run -> {
-                    player.closeInventory();
-                    Bukkit.dispatchCommand(player, "lottery stats");
+                click -> {
+                    Player whoClicked = (Player) click.getWhoClicked();
+                    whoClicked.closeInventory();
+                    Bukkit.dispatchCommand(whoClicked, "lottery stats");
                 }
         ));
         builder.setItem(20, new ItemBuilder(MenuItemType.MAIN_CURRENT_MONEY.get())
                 .replaceLore("{amount}", lotteryManager.getCurrentLottery().getAmount()+"")
                 .create());
         builder.setItem(29, new GUIItem(MenuItemType.MAIN_LIST.get(),
-                run -> {
-                    player.closeInventory();
-                    Bukkit.dispatchCommand(player, "lottery list");
+                click -> {
+                    Player whoClicked = (Player) click.getWhoClicked();
+                    whoClicked.closeInventory();
+                    Bukkit.dispatchCommand(whoClicked, "lottery list");
                 }));
         builder.setItem(22, MenuItemType.MAIN_INSTRUCTIONS.get());
         builder.setItem(31, MenuItemType.MAIN_HELP.get());
         builder.setItem(24, new GUIItem(MenuItemType.MAIN_BUY.get(),
-                run -> {
-                    ClickType type = run.getClick();
+                click -> {
+                    Player whoClicked = (Player) click.getWhoClicked();
+                    ClickType type = click.getClick();
                     if (type.equals(ClickType.LEFT)){
-                        Bukkit.dispatchCommand(player, "lottery buy 1");
+                        Bukkit.dispatchCommand(whoClicked, "lottery buy 1");
                     }else if (type.equals(ClickType.MIDDLE)){
-                        Bukkit.dispatchCommand(player, "lottery buy 10");
+                        Bukkit.dispatchCommand(whoClicked, "lottery buy 10");
                     }else if (type.equals(ClickType.RIGHT)){
-                        Bukkit.dispatchCommand(player, "lottery buy 30");
+                        Bukkit.dispatchCommand(whoClicked, "lottery buy 30");
                     }
                 }));
         builder.setItem(33, new ItemBuilder(MenuItemType.MAIN_TIME_LEFT.get())
                 .replaceLore("{time}", FormatUtil.formatTime(lotteryManager.getTime()))
                 .create());
 
-        return builder.create();
+        gui = builder.create();
     }
 }

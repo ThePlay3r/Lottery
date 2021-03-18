@@ -2,14 +2,12 @@ package me.pljr.lottery.managers;
 
 import me.pljr.lottery.Lottery;
 import me.pljr.lottery.config.ActionBarType;
-import me.pljr.lottery.config.CfgSettings;
 import me.pljr.lottery.config.Lang;
+import me.pljr.lottery.config.Settings;
 import me.pljr.lottery.config.TitleType;
-import me.pljr.lottery.objects.CorePlayer;
 import me.pljr.lottery.objects.GameLottery;
-import me.pljr.lottery.utils.GameLotteryUtil;
-import me.pljr.pljrapispigot.managers.ActionBarManager;
-import me.pljr.pljrapispigot.managers.TitleManager;
+import me.pljr.pljrapispigot.builders.ActionBarBuilder;
+import me.pljr.pljrapispigot.builders.TitleBuilder;
 import me.pljr.pljrapispigot.utils.ChatUtil;
 import me.pljr.pljrapispigot.utils.VaultUtil;
 import org.bukkit.Bukkit;
@@ -21,26 +19,31 @@ import java.util.Random;
 import java.util.UUID;
 
 public class GameLotteryManager {
+    private final Settings settings;
+    private final PlayerManager playerManager;
+
     private GameLottery currentLottery;
     private int time;
 
-    public GameLotteryManager(){
+    public GameLotteryManager(Settings settings, PlayerManager playerManager){
+        this.settings = settings;
         this.currentLottery = new GameLottery();
-        this.time = CfgSettings.COUNTDOWN;
+        this.time = settings.getCountdown();
+        this.playerManager = playerManager;
     }
 
     public void start(){
         currentLottery = new GameLottery();
-        if (CfgSettings.BROADCAST_CHAT){
-            ChatUtil.broadcast(GameLotteryUtil.getChatStart(), "", CfgSettings.BUNGEE);
+        if (settings.isBroadcastChat()){
+            ChatUtil.broadcast(Lang.BROADCAST_START.get().replace("{cost}", settings.getCost() + ""), "", settings.isBungee());
         }
-        if (CfgSettings.BROADCAST_ACTIONBAR){
-            ActionBarManager.broadcast(GameLotteryUtil.getActionBarStart());
+        if (settings.isBroadcastActionbar()){
+            new ActionBarBuilder(ActionBarType.BROADCAST_START.get()).replaceMessage("{cost}", settings.getCost() + "").create().broadcast();
         }
-        if (CfgSettings.BROADCAST_TITLE){
-            TitleManager.broadcast(GameLotteryUtil.getTitleStart());
+        if (settings.isBroadcastTitle()){
+            new TitleBuilder(TitleType.BROADCAST_START.get()).replaceSubtitle("{cost}", settings.getCost() + "").create().broadcast();
         }
-        Bukkit.getScheduler().runTaskTimerAsynchronously(Lottery.getInstance(), ()->{
+        Bukkit.getScheduler().runTaskTimerAsynchronously(Lottery.get(), ()->{
             if (getTime() == 0){
                 end(true);
             }
@@ -53,7 +56,7 @@ public class GameLotteryManager {
         int amount = currentLottery.getAmount();
         players.add(player);
         currentLottery.setPlayers(players);
-        currentLottery.setAmount(amount+CfgSettings.COST);
+        currentLottery.setAmount(amount + settings.getCost());
     }
 
     public void addMoney(int amount){
@@ -62,52 +65,58 @@ public class GameLotteryManager {
     }
 
     public void end(boolean selectWinner){
-        Bukkit.getScheduler().cancelTasks(Lottery.getInstance());
-        time = CfgSettings.COUNTDOWN;
+        Bukkit.getScheduler().cancelTasks(Lottery.get());
+        time = settings.getCountdown();
         if (selectWinner){
             if (currentLottery.getPlayers().size() == 0){
-                if (CfgSettings.BROADCAST_CHAT){
-                    ChatUtil.broadcast(Lang.BROADCAST_NO_WINNER.get(), "", CfgSettings.BUNGEE);
+                if (settings.isBroadcastChat()){
+                    ChatUtil.broadcast(Lang.BROADCAST_NO_WINNER.get(), "", settings.isBungee());
                 }
-                if (CfgSettings.BROADCAST_ACTIONBAR){
+                if (settings.isBroadcastActionbar()){
                     ActionBarType.BROADCAST_NO_WINNER.get().broadcast();
                 }
-                if (CfgSettings.BROADCAST_TITLE){
+                if (settings.isBroadcastTitle()){
                     TitleType.BROADCAST_NO_WINNER.get().broadcast();
                 }
             }else{
                 Player winner = currentLottery.getPlayers().get(new Random().nextInt(currentLottery.getPlayers().size()));
                 UUID winnerId = winner.getUniqueId();
                 String winnerName = winner.getName();
-                CorePlayer corePlayer = Lottery.getPlayerManager().getCorePlayer(winnerId);
-                int amount = currentLottery.getAmount();
-                if (CfgSettings.BROADCAST_CHAT){
-                    ChatUtil.broadcast(GameLotteryUtil.getChatEnd(winnerName, amount), "", CfgSettings.BUNGEE);
-                }
-                if (CfgSettings.BROADCAST_ACTIONBAR){
-                    ActionBarManager.broadcast(GameLotteryUtil.getActionBarEnd(winnerName, amount));
-                }
-                if (CfgSettings.BROADCAST_TITLE){
-                    TitleManager.broadcast(GameLotteryUtil.getTitleEnd(winnerName, amount));
-                }
-                VaultUtil.deposit(winner, amount);
-                currentLottery.setPlayers(new ArrayList<>());
-                corePlayer.setCurrentTickets(0);
-                corePlayer.setWonAmountLast(amount);
-                int maxWin = corePlayer.getWonAmountMax();
-                int total = corePlayer.getWonAmountTotal();
-                if (maxWin < amount){
-                    corePlayer.setWonAmountMax(amount);
-                }
-                corePlayer.setWonAmountTotal(total+amount);
-                if (winner.isOnline()){
-                    ChatUtil.sendMessage(winner, Lang.PLAYER_WIN.get().replace("{winAmount}", amount+""));
-                }
-                Lottery.getPlayerManager().setCorePlayer(winnerId, corePlayer);
+                playerManager.getPlayer(winnerId, lotteryPlayer -> {
+                    int amount = currentLottery.getAmount();
+                    if (settings.isBroadcastChat()){
+                        ChatUtil.broadcast(Lang.BROADCAST_END.get()
+                                .replace("{winner}", winnerName).replace("{winAmount}", amount + ""), "", settings.isBungee());
+                    }
+                    if (settings.isBroadcastActionbar()){
+                        new ActionBarBuilder(ActionBarType.BROADCAST_END.get())
+                                .replaceMessage("{winAmount}", amount + "")
+                                .replaceMessage("{winner}", winnerName).create().broadcast();
+                    }
+                    if (settings.isBroadcastTitle()){
+                        new TitleBuilder(TitleType.BROADCAST_END.get())
+                                .replaceSubtitle("{winAmount}", amount + "")
+                                .replaceSubtitle("{winner}", winnerName).create().broadcast();
+                    }
+                    VaultUtil.deposit(winner, amount);
+                    currentLottery.setPlayers(new ArrayList<>());
+                    lotteryPlayer.setCurrentTickets(0);
+                    lotteryPlayer.setWonAmountLast(amount);
+                    int maxWin = lotteryPlayer.getWonAmountMax();
+                    int total = lotteryPlayer.getWonAmountTotal();
+                    if (maxWin < amount){
+                        lotteryPlayer.setWonAmountMax(amount);
+                    }
+                    lotteryPlayer.setWonAmountTotal(total+amount);
+                    if (winner.isOnline()){
+                        ChatUtil.sendMessage(winner, Lang.PLAYER_WIN.get().replace("{winAmount}", amount+""));
+                    }
+                    playerManager.setPlayer(winnerId, lotteryPlayer);
+                });
             }
         }
-        if (CfgSettings.RESTART_ON_END){
-            Bukkit.getScheduler().runTaskLater(Lottery.getInstance(), this::start, 20*15);
+        if (settings.isRestartOnEnd()){
+            Bukkit.getScheduler().runTaskLater(Lottery.get(), this::start, 20*15);
         }
     }
 

@@ -1,29 +1,21 @@
 package me.pljr.lottery;
 
+import lombok.AllArgsConstructor;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.pljr.lottery.managers.GameLotteryManager;
 import me.pljr.lottery.managers.PlayerManager;
-import me.pljr.lottery.objects.CorePlayer;
 import me.pljr.lottery.objects.GameLottery;
+import me.pljr.lottery.objects.LotteryPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
+@AllArgsConstructor
 public class PapiExpansion extends PlaceholderExpansion {
 
-    private Lottery plugin;
-
-    /**
-     * Since we register the expansion inside our own plugin, we
-     * can simply use this method here to get an instance of our
-     * plugin.
-     *
-     * @param plugin
-     *        The instance of our plugin.
-     */
-    public PapiExpansion(Lottery plugin){
-        this.plugin = plugin;
-    }
+    private final Lottery plugin;
+    private final PlayerManager playerManager;
+    private final GameLotteryManager gameLotteryManager;
 
     /**
      * Because this is an internal class,
@@ -107,26 +99,23 @@ public class PapiExpansion extends PlaceholderExpansion {
 
         UUID playerId = player.getUniqueId();
 
-        PlayerManager playerManager = Lottery.getPlayerManager();
-        CorePlayer corePlayer = playerManager.getCorePlayer(playerId);
-
-        GameLotteryManager gameLotteryManager = Lottery.getGameLotteryManager();
+        LotteryPlayer lotteryPlayer = playerManager.getPlayer(playerId);
         GameLottery gameLottery = gameLotteryManager.getCurrentLottery();
 
         if (identifier.equals("player_current_tickets")){
-            return corePlayer.getCurrentTickets()+"";
+            return lotteryPlayer.getCurrentTickets()+"";
         }
 
         if (identifier.equals("player_won_amount_total")){
-            return corePlayer.getWonAmountTotal()+"";
+            return lotteryPlayer.getWonAmountTotal()+"";
         }
 
         if (identifier.equals("player_won_amount_last")){
-            return corePlayer.getWonAmountLast()+"";
+            return lotteryPlayer.getWonAmountLast()+"";
         }
 
         if (identifier.equals("player_won_amount_max")){
-            return corePlayer.getWonAmountMax()+"";
+            return lotteryPlayer.getWonAmountMax()+"";
         }
 
         if (identifier.equals("current_time")){

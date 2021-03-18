@@ -1,21 +1,24 @@
 package me.pljr.lottery.menus;
 
-import me.pljr.lottery.Lottery;
+import lombok.Getter;
 import me.pljr.lottery.config.Lang;
 import me.pljr.lottery.config.MenuItemType;
-import me.pljr.lottery.objects.CorePlayer;
+import me.pljr.lottery.objects.LotteryPlayer;
 import me.pljr.pljrapispigot.builders.GUIBuilder;
 import me.pljr.pljrapispigot.builders.ItemBuilder;
 import me.pljr.pljrapispigot.objects.GUI;
 import me.pljr.pljrapispigot.objects.GUIItem;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class PlayerMenu {
 
-    public static GUI get(Player player, Player menuPlayer){
+    @Getter private final GUI gui;
+
+    public PlayerMenu(LotteryPlayer lotteryPlayer){
         GUIBuilder builder = new GUIBuilder(Lang.MENU_TITLE.get(), 6);
 
-        CorePlayer corePlayer = Lottery.getPlayerManager().getCorePlayer(menuPlayer.getUniqueId());
+        Player player = Bukkit.getPlayer(lotteryPlayer.getUniqueId());
 
         builder.setItem(0, MenuItemType.PLAYER_BACKGROUND_1.get());
         builder.setItem(9, MenuItemType.PLAYER_BACKGROUND_1.get());
@@ -41,23 +44,23 @@ public class PlayerMenu {
         builder.setItem(41, MenuItemType.PLAYER_BACKGROUND_2.get());
         builder.setItem(42, MenuItemType.PLAYER_BACKGROUND_2.get());
 
-        String playerName = menuPlayer.getName();
+        String playerName = player.getName();
 
         builder.setItem(22, new ItemBuilder(MenuItemType.PLAYER_HEAD.get())
                 .withOwner(playerName)
                 .replaceName("{name}", playerName)
                 .create());
         builder.setItem(29, new ItemBuilder(MenuItemType.PLAYER_TICKETS.get())
-                .replaceLore("{amount}", corePlayer.getCurrentTickets()+"")
+                .replaceLore("{amount}", lotteryPlayer.getCurrentTickets()+"")
                 .create());
         builder.setItem(31, new ItemBuilder(MenuItemType.PLAYER_BIGGEST_WIN.get())
-                .replaceLore("{amount}", corePlayer.getWonAmountMax()+"")
+                .replaceLore("{amount}", lotteryPlayer.getWonAmountMax()+"")
                 .create());
         builder.setItem(33, new ItemBuilder(MenuItemType.PLAYER_EARNINGS.get())
-                .replaceLore("{amount}", corePlayer.getWonAmountTotal()+"")
+                .replaceLore("{amount}", lotteryPlayer.getWonAmountTotal()+"")
                 .create());
-        builder.setItem(40, new GUIItem(MenuItemType.PLAYER_BACK.get(), run -> player.closeInventory()));
+        builder.setItem(40, new GUIItem(MenuItemType.PLAYER_BACK.get(), click -> click.getWhoClicked().closeInventory()));
 
-        return builder.create();
+        gui = builder.create();
     }
 }

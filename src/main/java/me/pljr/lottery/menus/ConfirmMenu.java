@@ -1,22 +1,24 @@
 package me.pljr.lottery.menus;
 
-import me.pljr.lottery.Lottery;
+import lombok.Getter;
 import me.pljr.lottery.config.Lang;
 import me.pljr.lottery.config.MenuItemType;
-import me.pljr.lottery.objects.CorePlayer;
-import me.pljr.lottery.utils.GameLotteryUtil;
+import me.pljr.lottery.managers.GameLotteryManager;
+import me.pljr.lottery.managers.PlayerManager;
 import me.pljr.pljrapispigot.builders.GUIBuilder;
 import me.pljr.pljrapispigot.managers.GUIManager;
 import me.pljr.pljrapispigot.objects.GUI;
 import me.pljr.pljrapispigot.objects.GUIItem;
 import me.pljr.pljrapispigot.utils.ChatUtil;
+import me.pljr.pljrapispigot.utils.VaultUtil;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
 public class ConfirmMenu {
+    @Getter private final GUI gui;
 
-    public static GUI get(Player player){
+    public ConfirmMenu(Player player, PlayerManager playerManager, GameLotteryManager gameLotteryManager, int amount, int cost){
         GUIBuilder builder = new GUIBuilder(Lang.MENU_TITLE.get(), 6);
 
         builder.setItem(18, MenuItemType.CONFIRM_BACKGROUND.get());
@@ -42,18 +44,22 @@ public class ConfirmMenu {
 
         GUIManager.ClickRunnable confirm = run -> {
             UUID playerId = player.getUniqueId();
-            CorePlayer corePlayer = Lottery.getPlayerManager().getCorePlayer(playerId);
+            playerManager.getPlayer(playerId, lotteryPlayer -> {
+                VaultUtil.withdraw(player, cost);
+                for (int i=0;i<amount;i++){
+                    gameLotteryManager.add(player);
+                }
+                int currentTickets = lotteryPlayer.getCurrentTickets();
+                lotteryPlayer.setCurrentTickets(currentTickets+amount);
+                playerManager.setPlayer(playerId, lotteryPlayer);
+                ChatUtil.sendMessage(player, Lang.BUY_SUCCESS.get().replace("{amount}", lotteryPlayer.getConfirmBuyAmount()+""));
+            });
             player.closeInventory();
-            if (GameLotteryUtil.confirm(player)){
-                ChatUtil.sendMessage(player, Lang.BUY_SUCCESS.get().replace("{amount}", corePlayer.getConfirmBuyAmount()+""));
-            }else{
-                ChatUtil.sendMessage(player, Lang.BUY_FAILURE.get().replace("{amount}", corePlayer.getConfirmBuyAmount()+""));
-            }
         };
 
         GUIManager.ClickRunnable decline = run -> {
             player.closeInventory();
-            MainMenu.get(player).open(player);
+            new MainMenu(player, gameLotteryManager).getGui().open(player);
         };
 
         GUIItem confirm1 = new GUIItem(MenuItemType.CONFIRM_CONFIRM_1.get(), confirm);
@@ -85,6 +91,6 @@ public class ConfirmMenu {
         builder.setItem(22, MenuItemType.CONFIRM_INFORMATION.get());
         builder.setItem(31, new GUIItem(MenuItemType.CONFIRM_BACK.get(), decline));
 
-        return builder.create();
+        gui = builder.create();
     }
 }

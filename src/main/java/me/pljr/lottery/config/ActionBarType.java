@@ -7,9 +7,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.util.HashMap;
 
 public enum ActionBarType {
-    BROADCAST_START(new PLJRActionBar("§a§lLOTTERY: §fNew §elottery §fjust started! §b/lottery", 40)),
-    BROADCAST_END(new PLJRActionBar("§a§lLOTTERY: §e{winner} §fwon §e{winAmount}§f!", 40)),
-    BROADCAST_NO_WINNER(new PLJRActionBar("§a§lLOTTERY: §eNoone participated.", 40));
+    BROADCAST_START(new PLJRActionBar("&a&lLOTTERY: &fNew &elottery &fjust started! &b/lottery", 40)),
+    BROADCAST_END(new PLJRActionBar("&a&lLOTTERY: &e{winner} &fwon &e{winAmount}&f!", 40)),
+    BROADCAST_NO_WINNER(new PLJRActionBar("&a&lLOTTERY: &eNoone participated.", 40));
 
     private static HashMap<ActionBarType, PLJRActionBar> actionbars;
     private final PLJRActionBar defaultValue;
@@ -23,18 +23,15 @@ public enum ActionBarType {
         FileConfiguration fileConfig = config.getConfig();
         for (ActionBarType actionBarType : values()){
             if (!fileConfig.isSet(actionBarType.toString())){
-                config.setPLJRActionBar(actionBarType.toString(), actionBarType.getDefault());
+                config.setPLJRActionBar(actionBarType.toString(), actionBarType.defaultValue);
+            }else{
+                actionbars.put(actionBarType, config.getPLJRActionBar(actionBarType.toString()));
             }
-            actionbars.put(actionBarType, config.getPLJRActionBar(actionBarType.toString()));
         }
         config.save();
     }
 
     public PLJRActionBar get(){
-        return actionbars.get(this);
-    }
-
-    public PLJRActionBar getDefault(){
-        return this.defaultValue;
+        return actionbars.getOrDefault(this, defaultValue);
     }
 }

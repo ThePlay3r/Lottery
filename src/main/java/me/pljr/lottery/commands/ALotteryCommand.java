@@ -1,15 +1,18 @@
 package me.pljr.lottery.commands;
 
-import me.pljr.lottery.Lottery;
 import me.pljr.lottery.config.Lang;
-import me.pljr.pljrapispigot.utils.CommandUtil;
+import me.pljr.lottery.managers.GameLotteryManager;
+import me.pljr.pljrapispigot.commands.BukkitCommand;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-public class ALotteryCommand extends CommandUtil {
+public class ALotteryCommand extends BukkitCommand {
 
-    public ALotteryCommand(){
+    private final GameLotteryManager gameLotteryManager;
+
+    public ALotteryCommand(GameLotteryManager gameLotteryManager){
         super("alottery", "alottery.use");
+        this.gameLotteryManager = gameLotteryManager;
     }
 
     @Override
@@ -25,7 +28,7 @@ public class ALotteryCommand extends CommandUtil {
             if (args[0].equalsIgnoreCase("restart")){
                 if (!checkPerm(player, "alottery.restart")) return;
                 sendMessage(player, Lang.RESTART_SUCCESS.get());
-                Lottery.getGameLotteryManager().end(false);
+                gameLotteryManager.end(false);
                 return;
             }
 
@@ -33,7 +36,7 @@ public class ALotteryCommand extends CommandUtil {
             if (args[0].equalsIgnoreCase("draw")){
                 if (!checkPerm(player, "alottery.draw")) return;
                 sendMessage(player, Lang.RESTART_SUCCESS.get());
-                Lottery.getGameLotteryManager().end(true);
+                gameLotteryManager.end(true);
                 return;
             }
         }
@@ -43,7 +46,7 @@ public class ALotteryCommand extends CommandUtil {
             if (args[0].equalsIgnoreCase("add")){
                 if (!checkInt(player, args[1])) return;
                 int amount = Integer.parseInt(args[1]);
-                Lottery.getGameLotteryManager().addMoney(amount);
+                gameLotteryManager.addMoney(amount);
                 sendMessage(player, Lang.ADD_MONEY_SUCCESS.get().replace("{amount}", amount+""));
                 return;
             }
@@ -63,14 +66,14 @@ public class ALotteryCommand extends CommandUtil {
             // /alottery restart
             if (args[0].equalsIgnoreCase("restart")){
                 sendMessage(sender, Lang.RESTART_SUCCESS.get());
-                Lottery.getGameLotteryManager().end(false);
+                gameLotteryManager.end(false);
                 return;
             }
 
             // /alottery draw
             if (args[0].equalsIgnoreCase("draw")){
                 sendMessage(sender, Lang.RESTART_SUCCESS.get());
-                Lottery.getGameLotteryManager().end(true);
+                gameLotteryManager.end(true);
                 return;
             }
         }
@@ -80,7 +83,7 @@ public class ALotteryCommand extends CommandUtil {
             if (args[0].equalsIgnoreCase("add")){
                 if (!checkInt(sender, args[1])) return;
                 int amount = Integer.parseInt(args[1]);
-                Lottery.getGameLotteryManager().addMoney(amount);
+                gameLotteryManager.addMoney(amount);
                 sendMessage(sender, Lang.ADD_MONEY_SUCCESS.get().replace("{amount}", amount+""));
                 return;
             }

@@ -1,65 +1,92 @@
 package me.pljr.lottery;
 
+import lombok.Getter;
 import me.pljr.lottery.commands.ALotteryCommand;
 import me.pljr.lottery.commands.LotteryCommand;
 import me.pljr.lottery.config.*;
-import me.pljr.lottery.listeners.PlayerPreLoginListener;
+import me.pljr.lottery.listeners.AsyncPlayerPreLoginListener;
 import me.pljr.lottery.listeners.PlayerQuitListener;
 import me.pljr.lottery.managers.GameLotteryManager;
 import me.pljr.lottery.managers.PlayerManager;
 import me.pljr.lottery.managers.QueryManager;
+import me.pljr.pljrapispigot.PLJRApiSpigot;
 import me.pljr.pljrapispigot.database.DataSource;
 import me.pljr.pljrapispigot.managers.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.logging.Logger;
+
 
 public final class Lottery extends JavaPlugin {
+
     private static Lottery instance;
-    private static PlayerManager playerManager;
-    private static ConfigManager configManager;
-    private static GameLotteryManager gameLotteryManager;
-    private static QueryManager queryManager;
+    public static Logger log;
+    private PLJRApiSpigot pljrApiSpigot;
+
+    private ConfigManager configManager;
+    @Getter private Settings settings;
+
+    private QueryManager queryManager;
+    private PlayerManager playerManager;
+    private GameLotteryManager gameLotteryManager;
+
+    public static Lottery get(){
+        return instance;
+    }
 
     @Override
     public void onEnable() {
         // Plugin startup logic
+        log = getLogger();
         instance = this;
+        if (!setupPLJRApi()) return;
         setupConfig();
+        setupDatabase();
         setupManagers();
         setupPAPI();
-        setupDatabase();
         setupListeners();
         setupCommands();
     }
+
+    public boolean setupPLJRApi(){
+        if (PLJRApiSpigot.get() == null){
+            getLogger().warning("PLJRApi-Spigot is not enabled!");
+            return false;
+        }
+        pljrApiSpigot = PLJRApiSpigot.get();
+        return true;
+    }
+
 
     private void setupConfig(){
         saveDefaultConfig();
         configManager = new ConfigManager(this, "config.yml");
         MenuItemType.load(new ConfigManager(this, "menus.yml"));
-        CfgSettings.load(configManager);
+        settings = new Settings(configManager);
         Lang.load(new ConfigManager(this, "lang.yml"));
         ActionBarType.load(new ConfigManager(this, "actionbars.yml"));
         TitleType.load(new ConfigManager(this, "titles.yml"));
     }
 
     private void setupManagers(){
-        playerManager = new PlayerManager();
-        gameLotteryManager = new GameLotteryManager();
-        if (CfgSettings.START_ON_STARTUP){
+        playerManager = new PlayerManager(this, queryManager, settings.isCachePlayers());
+        gameLotteryManager = new GameLotteryManager(settings, playerManager);
+        if (settings.isStartOnStartup()){
             gameLotteryManager.start();
         }
     }
 
     private void setupPAPI(){
         if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
-            new PapiExpansion(this).register();
+            new PapiExpansion(this, playerManager, gameLotteryManager).register();
         }
     }
 
     private void setupDatabase(){
-        DataSource dataSource = DataSource.getFromConfig(configManager);
+        DataSource dataSource = pljrApiSpigot.getDataSource(configManager);
+        dataSource.initPool("Lottery-Pool");
         queryManager = new QueryManager(dataSource);
         queryManager.setupTables();
         for (Player player : Bukkit.getOnlinePlayers()){
@@ -68,36 +95,20 @@ public final class Lottery extends JavaPlugin {
     }
 
     private void setupListeners(){
-        getServer().getPluginManager().registerEvents(new PlayerPreLoginListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
+        getServer().getPluginManager().registerEvents(new AsyncPlayerPreLoginListener(playerManager), this);
+        getServer().getPluginManager().registerEvents(new PlayerQuitListener(playerManager), this);
     }
 
     private void setupCommands(){
-        new LotteryCommand().registerCommand(this);
-        new ALotteryCommand().registerCommand(this);
-    }
-
-    public static Lottery getInstance() {
-        return instance;
-    }
-    public static ConfigManager getConfigManager() {
-        return configManager;
-    }
-    public static GameLotteryManager getGameLotteryManager() {
-        return gameLotteryManager;
-    }
-    public static QueryManager getQueryManager() {
-        return queryManager;
-    }
-    public static PlayerManager getPlayerManager() {
-        return playerManager;
+        new LotteryCommand(settings, playerManager, gameLotteryManager).registerCommand(this);
+        new ALotteryCommand(gameLotteryManager).registerCommand(this);
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        instance = null;
         for (Player player : Bukkit.getOnlinePlayers()){
-            queryManager.savePlayerSync(player.getUniqueId());
+            playerManager.getPlayer(player.getUniqueId(), queryManager::savePlayer);
         }
     }
 }
